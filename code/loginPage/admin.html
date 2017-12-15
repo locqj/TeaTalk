@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>js实现移动客户端手势上下滑屏效果</title>
+<script type="text/javascript" src="js/cardview.js"></script>
+<style type="text/css">
+  html,body {
+    width: 100%;
+    height: 100%;
+    margin:0px;
+    padding:0px;
+    font-family: "微软雅黑";
+    font-size: 10px;
+    color:#303439;
+    overflow: hidden;
+  }
+  #wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding:10%;
+    box-sizing: border-box;
+    font-size: 1.6rem;
+    background: url(bg.jpg) no-repeat;
+    background-size: cover;
+  }
+  h1 {
+    color:#303439;
+    text-align: center;
+    font-size: 3.5rem;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
+  #wrapper .signIn,#wrapper .signOut {
+    position: absolute;
+    width: 80%;
+    height: 320px;
+    background: #fff;
+    border-radius: 10px;
+    padding:5%;
+    top:0px;
+    bottom: 0px;
+    margin: auto;
+    box-sizing: border-box;
+    z-index: 99999;
+  }
+  #wrapper .signIn {
+    right: -90%;
+    height: 430px;
+  }
+  .container1 {
+    position: relative;
+  }
+  form {
+    margin:0 auto;
+    width: 90%;
+  }
+  div.form-group:not(.formGroup),div.btn-group {
+    width: 100%;
+    height: 42px;
+    position: relative;
+    margin-top:15px;
+  }
+  div.formGroup {
+    font-size: 1.4rem;
+    position: relative;
+  }
+  div.formGroup span {
+    display: inline-block;
+    height: 20px;
+  }
+  div.formGroup span:nth-child(1) input{
+    vertical-align: middle;
+    height: 14px;
+  }
+   div.formGroup span:nth-child(2){
+      position: absolute;
+      right: 0px;
+   }
+  div.form-group>label,div.btn-group>label {
+    position: absolute;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    min-width: 40px;
+    margin-left: 6px;
+    text-align: right;
+    box-sizing: border-box;
+  }
+  div.form-group>input,div.btn-group>input:not([type='checkbox']) {
+    display: block;
+    width: 100%;
+    height: 40px;
+    border: 1px solid #bfbfbf;
+    border-radius: 5px;
+    padding-left: 50px;
+    box-sizing: border-box;
+  }
+  div.form-group:nth-child(4)>input{
+    padding-left:62px !important;
+  }
+  input:focus,button:focus {
+    outline: none;
+  }
+  button.sendPhone {
+    position: absolute;
+    background: #303439;
+    top:0px;
+    right: 0px;
+    width:10rem;
+    height: 40px;
+    border:1px solid #303439;
+    text-align: center !important;
+    padding:0px !important;
+    border-radius:0px !important;
+    color:#fff;
+  }
+  @media screen and (min-width:320px) and (max-width: 380px) {
+    button.sendPhone {
+      width: 7rem;
+    }
+    .btn {
+      width: 6.5rem !important;
+    }
+  }
+  .btn-group {
+    text-align: center;
+  }
+  .btn {
+    width: 8.3rem;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #303439;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .btn:nth-child(2){
+    margin-left:10px;
+  }
+  .btnSignUp {
+    background: #fff;
+  }
+  .btnSignIn,.btnReset {
+    background: #303439;
+    color:#fff;
+  }
+  .bgImg {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    filter: url(blur.svg#blur);
+  }
+  .blur {    
+    position: absolute;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    background: url(bg.jpg) no-repeat;
+    background-size: cover;
+    top: 0px;
+    left: 0px;
+    -webkit-filter: blur(20px); /* Chrome, Opera */
+       -moz-filter: blur(20px);
+        -ms-filter: blur(20px);    
+            filter: blur(20px);
+  }
+  /*动画效果*/
+  .error {
+    animation: errAnimation 200ms;
+  }
+  @keyframes errAnimation {
+    0% {
+      transform: translateX(4px);
+    }
+    20% {
+      transform: translateX(0px);
+    }
+    40% {
+      transform: translateX(-4px);
+    }
+    60% {
+      transform: translateX(0px);
+    }
+    80% {
+      transform: translateX(4px);
+    }
+    100% {
+      transform: translateX(0px);
+    }
+  }
+</style>
+<script type="text/javascript">
+  function slideFuns(){
+    var btnDomStr=['btnSignUp1','btnSignIn','btnSignUp','btnReset','signOut','signIn'];
+    var btnDomArr=[];
+    var Int1=null,Int2=null;
+    for(var i=0;i<btnDomStr.length;i++){
+      btnDomArr[i]=getDom(btnDomStr[i]);
+    }
+    btnDomArr[0].onclick=function(){
+        var upY1=0,upY2=90;
+        Int1=setInterval(slide1(upY1,upY2,btnDomArr[4],btnDomArr[5],Int1),10);
+      }
+    btnDomArr[3].onclick=function(){
+        var upY1=90,upY2=0;
+        Int2=setInterval(slide2(upY1,upY2,btnDomArr[4],btnDomArr[5],Int2),10);
+      }
+    btnDomArr[1].onclick=function(){
+      var strArr=["outUserName","outPwd"];
+      isSignOut(strArr,btnDomArr[4],"signOut");
+    }
+    btnDomArr[2].onclick=function(){
+      var strArr=["inUserName","inPwd1","inPwd2","yzm"];
+      isSignOut(strArr,btnDomArr[5],"signIn");
+    }
+  }
+  function slide1(y1,y2,that1,that2,Int){
+    return function(){
+        if(y1<90){
+          that1.style.left=(-y1)+"%";
+          y1+=5;
+        }if(y2>-15){
+          that2.style.right=(-y2)+"%";
+          y2-=5;
+        }else{
+          clearInterval(Int);
+        }
+    }
+  }
+  function slide2(y1,y2,that1,that2,Int){
+    return function(){
+        if(y1>-15){
+          that1.style.left=(-y1)+"%";
+          y1-=5;
+        }if(y2<90){
+          that2.style.right=(-y2)+"%";
+          y2+=5;
+        }else{
+          clearInterval(Int);
+        }
+    }
+  }
+  //定义DOM函数
+  function getDom(dom){
+    var domNode=document.getElementById(dom)?document.getElementById(dom):document.getElementsByClassName(dom)[0];
+    return domNode;
+  }
+  //登陆数据判断
+  function isSignOut(parmArr,parentDom,classStr){
+    var strArr=parmArr;
+    var domArr=[];
+    for(var i=0;i<strArr.length;i++){
+      domArr[i]=getDom(strArr[i]);
+    }
+    if(domArr.length != 0){
+      for(var j=0;j<domArr.length;j++){
+        var domVal=domArr[j].value;
+        if(domVal==""){
+          parentDom.setAttribute("class",classStr+" error");
+          domArr[j].style.border="1px solid #f00";
+        }
+        domArr[j].onfocus=function(){
+          this.style.border="1px solid #ccc";
+          parentDom.setAttribute("class",classStr);
+        }
+      }
+    }
+  }
+  window.onload=function(){
+      slideFuns();
+  }
+</script>
+</head>
+<body>
+<div id="wrapper">
+  <div class="bgImg">
+    <div class="blur"></div>
+  </div>
+  <div class="signOut">
+    <h1>oneGo</h1>
+    <div class="container1">
+      <form action="#" method="post">
+        <div class="form-group">
+            <label for="outUserName">账号:</label>
+            <input type="text" class="outUserName" name="outUserName">
+        </div>
+        <div class="form-group">
+            <label for="outPwd">密码:</label>
+            <input type="password" class="outPwd" name="outPwd">
+        </div>
+        <div class="form-group formGroup">
+            <span class="remeberUser">
+              <input type="checkbox">记住账号
+            </span>
+            <span class="forgetPwd">
+              忘记密码?
+            </span>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btnSignUp" id="btnSignUp1">注册</button>
+            <button type="button" class="btn btnSignIn" id="btnSignIn">登录</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="signIn">
+    <h1>oneGo</h1>
+    <div class="container1">
+      <form action="#" method="post">
+        <div class="form-group">
+            <label for="inUserName">账号:</label>
+            <input type="text" class="inUserName" name="inUserName" placeholder="请输入账号">
+        </div>
+        <div class="form-group">
+            <label for="inPwd1">密码:</label>
+            <input type="password" class="inPwd1" name="inPwd1" placeholder="请输入密码">
+        </div>
+        <div class="form-group">
+            <label for="inPwd2">密码:</label>
+            <input type="password" class="inPwd2" name="inPwd2" placeholder="请输入密码">
+        </div>
+        <div class="form-group">
+            <label for="yzm">验证码:</label>
+            <input type="text" class="yzm" name="yzm" placeholder="验证码">
+            <button type="button" class="sendPhone">发送短信</button>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btnSignUp" id="btnSignUp">注册</button>
+            <button type="button" class="btn btnReset" id="btnReset">返回</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
