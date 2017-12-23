@@ -20,7 +20,8 @@
             return {
                 "pageName": "微信"
             }
-        }
+        },
+      
     }
 </script>
 <style>

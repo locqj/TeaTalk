@@ -91,6 +91,48 @@
                 }
             }
         },
+        created() {
+
+            let _this = this;
+            let conn = new WebSocket('ws://127.0.0.1:9501');
+
+            conn.onopen = function(evt){
+                // _this.showNotice(' 连接成功！','success');
+                // _this.changeStatus(true);
+            }
+            conn.onclose = function(evt){
+                // _this.showNotice(' 已断开连接！','error');
+                // _this.changeStatus(false);
+            }
+            conn.onmessage = function(evt){
+                let msg = JSON.parse(evt.data);
+
+                switch(msg.type){
+                    case 'connect':
+                        console.log(msg.data);
+                        _this.addUser(msg.data);
+                        _this.setCount(msg.data.count);
+                        break;
+                    case 'disconnect':
+                        _this.removeUser(msg.data.id);
+                        _this.setCount(msg.data.count);
+                        break;
+                    case 'self_init':
+                        _this.setUser(msg.data);
+                        _this.setCount(msg.data.count);
+                        break;
+                    case 'other_init':
+                        _this.addUser(msg.data);
+                        break;
+                    case 'message':
+                        _this.addMessage(msg.data);
+
+                        break;
+                }
+            }
+
+            _this.setConn(conn);
+        },
         directives: {
             press: {
                 inserted(element, binding) {
@@ -98,7 +140,7 @@
                         recordingVoice = document.querySelector('.recording-voice'),
                         recordingCancel = document.querySelector('.recording-cancel'),
                         startTx, startTy;
-                    
+
                     element.addEventListener('touchstart', function(e) {
                         // 用bind时，vue还没插入到dom,故dom获取为 undefine，用 inserted 代替 bind,也可以开个0秒的定时器
                         element.className = "chat-say say-active"
@@ -152,7 +194,7 @@
                             touches = e.touches[0];
                         startTx = touches.clientX
                         startTy = touches.clientY
-                        
+
                         clearTimeout(this.timer)
                         this.timer = setTimeout(()=>{
                             // 控制菜单的位置

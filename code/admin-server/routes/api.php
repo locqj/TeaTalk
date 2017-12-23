@@ -35,7 +35,7 @@ $api->version('v1', function ($api) {
         $api->post('friends/doadd', 'FriendsController@doAddFriend');
         $api->post('friends/doaccept', 'FriendsController@doAcceptFriend');
         $api->post('friends/dorefuse', 'FriendsController@doRefuseFriend');
-
+        $api->get('test', 'MomentsController@test');
     });
 
     $api->group(['namespace' => 'App\Api\Controllers', 'middleware'=>'jwt.auth'],function ($api){

@@ -13,6 +13,12 @@ use App\Model\MomentsComment;
 date_default_timezone_set('Asia/Shanghai');
 class MomentsController extends Controller
 {	
+    public function test ()
+    {
+        return DB::table('users')->get();
+    }
+
+
 
     /**
      * [addMoments 添加朋友圈]
