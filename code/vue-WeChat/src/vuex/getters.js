@@ -1,6 +1,6 @@
 const getters = {
 
-    //  从联系人中提取出首字母 再排序 
+    //  从联系人中提取出首字母 再排序
 
     contactsInitialList: state => {
         var initialList = [],
@@ -31,8 +31,30 @@ const getters = {
         return contactsList
     },
     token (state) {
-    return state.token
-  }
+        return state.token
+    },
+    filterUser : ({ filterUser }) => filterUser,
+
+    currentUser : ({ currentUser }) => currentUser,  //current user
+
+    users : ({ users }) => users,    //user list
+
+    currentSession : ({ currentSession }) => currentSession,
+
+    broadcast : ({ broadcast }) => broadcast,
+
+    conn : ({ connection }) => {
+
+        if (connection != null) {
+            return connection;
+        }
+    },
+
+    online : ({ online }) => online,
+
+    currentCount : ({ currentCount }) => currentCount,
+
+    notice : ({ notice }) => notice
 }
 
 export default getters

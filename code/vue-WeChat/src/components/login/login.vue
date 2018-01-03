@@ -29,7 +29,7 @@
                 <router-link to="" class="weui-footer__link">忘记密码？</router-link>
                 <router-link to="/register" class="weui-footer__link">注册</router-link>
             </p>
-            
+
         </div>
     </div>
     <div class="weui-footer weui-footer_fixed-bottom locqj-footer">
@@ -37,7 +37,7 @@
                 <a href="javascript:home();" class="weui-footer__link">Tea-talk</a>
             </p>
             <p class="weui-footer__text">Copyright © 2014-2018 locqj.top</p>
-    </div>   
+    </div>
 </div>
 
 </template>
@@ -45,7 +45,7 @@
 import { Toast } from 'mint-ui'
 export default {
     data(){
-        return{    
+        return{
             userInfo: {
                 name: '',
                 password: '',
@@ -85,7 +85,7 @@ export default {
                         })
                     }
                 })
-            } 
+            }
         }
     }
 

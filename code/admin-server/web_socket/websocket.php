@@ -1,57 +1,57 @@
 <?php
 /**
 *   the format of json
-*   
+*
 *   CONNECT
 *   {
-        status : 200,
-        type : 'connect',
-        data : {
-            id : 0,
-            avatar : '',
-            nickname : ''
-        }
-    }
+*        status : 200,
+*        type : 'connect',
+*        data : {
+*            id : 0,
+*            avatar : '',
+*            nickname : ''
+*        }
+*    }*
 
-    DISCONNECT
-    {
-        status : 200,
-        type : 'disconnect',
-        data : {
-            id : 0
-        }
-    }
+*    DISCONNECT
+*    {
+*        status : 200,
+*        type : 'disconnect',
+*        data : {
+*            id : 0
+*        }
+*    }*
 
-    MESSAGE
-    {
-        status : 200,
-        type : 'message',
-        data : {
-            from : 0,
-            to : 0,
-            msg : ''
-        }
-    }
+*    MESSAGE
+*    {
+*        status : 200,
+*        type : 'message',
+*        data : {
+*            from : 0,
+*            to : 0,
+*            msg : ''
+*        }
+*    }*
 
-    INIT
-    {
-        status : 200,
-        type : 'init',
-        data : {
-            
-        }
-    }
-
-
+*    INIT
+*    {
+*        status : 200,
+*        type : 'init',
+*        data : {
+*
+*        }
+*    }
 *
 */
 class WebSocket{
+    // 初始化连接相关
     const CONNECT_TYPE = 'connect';
     const DISCONNECT_TYPE = 'disconnect';
-    const MESSAGE_TYPE = 'message';
-    const INIT_SELF_TYPE = 'self_init';
-    const INIT_OTHER_TYPE = 'other_init';
-    const COUNT_TYPE = 'count';
+
+    const MESSAGE_TYPE = 'message'; //信息类型
+    const INIT_SELF_TYPE = 'self_init'; //个人信息
+    const INIT_OTHER_TYPE = 'other_init'; //在线其他用户信息
+    const COUNT_TYPE = 'count'; //
 
     private $avatars = [
         'http://e.hiphotos.baidu.com/image/h%3D200/sign=08f4485d56df8db1a32e7b643922dddb/1ad5ad6eddc451dad55f452ebefd5266d116324d.jpg',
@@ -98,12 +98,10 @@ class WebSocket{
         $server->on('close', [$this, 'close']);
         $server->on('task', [$this, 'task']);
         $server->on('finish', [$this, 'finish']);
-
         $server->start();
     }
-
     public function open(swoole_websocket_server $server, swoole_http_request $req){
-
+        var_dump($req->fd);
         $avatar = $this->avatars[array_rand($this->avatars)];
         $nickname = $this->nicknames[array_rand($this->nicknames)];
 
@@ -138,7 +136,7 @@ class WebSocket{
                 'data' => $otherMsg
             ]);
 
-    
+
 
         //broadcast a user is online
         $msg = $this->buildMsg([
@@ -151,7 +149,7 @@ class WebSocket{
                 'to' => [],
                 'except' => [$req->fd],
                 'data' => $msg
-            ]);
+        ]);
     }
 
     public function message(swoole_websocket_server $server, swoole_websocket_frame $frame){
@@ -200,6 +198,13 @@ class WebSocket{
 
     }
 
+    /**
+     * [buildMsg msg格式]
+     * @param  [type]  $data   [description]
+     * @param  [type]  $type   [description]
+     * @param  integer $status [description]
+     * @return [type]          [description]
+     */
     private function buildMsg($data,$type,$status = 200){
         return json_encode([
                 'status' => $status,
