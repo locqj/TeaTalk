@@ -28,7 +28,8 @@
         <footer class="dialogue-footer">
             <div class="component-dialogue-bar-person">
                 <span class="iconfont icon-dialogue-jianpan" v-show="!currentChatWay" v-on:click="currentChatWay=true"></span>
-                <span class="iconfont icon-dialogue-voice" v-show="currentChatWay" v-on:click="currentChatWay=false"></span>
+                <span class="more iconfont icon-dialogue-jia"></span>
+                <!-- <span class="iconfont icon-dialogue-voice" v-show="currentChatWay" v-on:click="currentChatWay=false"></span> -->
                 <div class="chat-way" v-show="!currentChatWay">
                     <div class="chat-say" v-press>
                         <span class="one">按住 说话</span>
@@ -36,10 +37,10 @@
                     </div>
                 </div>
                 <div class="chat-way" v-show="currentChatWay">
-                    <input class="chat-txt" type="text" v-on:focus="focusIpt" v-on:blur="blurIpt"/>
+                    <input class="chat-txt" type="text" v-model="msg" v-on:focus="focusIpt" v-on:blur="blurIpt"/>
                 </div>
-                <span class="expression iconfont icon-dialogue-smile"></span>
-                <span class="more iconfont icon-dialogue-jia"></span>
+                <!-- <span class="expression iconfont icon-dialogue-smile">发送</span> -->
+                <mt-button size="small" style="width: 14.5%; margin-top:0.8%; margin-left:1%;  margin-right:1%" @click="send">send</mt-button>
                 <div class="recording" style="display: none;" id="recording">
                     <div class="recording-voice" style="display: none;" id="recording-voice">
                         <div class="voice-inner">
@@ -73,8 +74,9 @@
             return {
                 pageName: this.$route.query.name,
                 currentChatWay: true, //ture为键盘打字 false为语音输入
-                timer: null
+                timer: null,
                     // sayActive: false // false 键盘打字 true 语音输入
+                msg: ""
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -197,6 +199,29 @@
                     msgMore.style.display = 'none'
                     container.forEach(item=>item.style.backgroundColor='#fff')
                 }
+            },
+            send(e){
+                let date = new Date().toLocaleString();
+                let _this = this;
+                let msg = {
+                        from : _this.$store.getters.currentUser.id,
+                        to :  _this.$store.getters.currentSession.id,
+                        msg : this.msg,//_this.$store.getters.content,
+                        date : date
+                };
+                console.log(msg);
+                 _this.$store.getters.conn.send(JSON.stringify(msg));
+
+                // if ( _this.$store.getters.content !== '' ) {
+                //      _this.$store.getters.conn.send(JSON.stringify(msg));
+                //      _this.$store.getters.content = '';
+                //      msg.is_self = 1;
+                //      _this.$store.dispatch('addMessage', msg);
+                // }else{
+                //     console.log("not null");
+                //      // _this.$store.getters.showNotice(' 消息不能为空!','warning');
+                // }
+
             }
         }
     }

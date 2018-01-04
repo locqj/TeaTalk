@@ -10,7 +10,8 @@
     <ul>
         <li v-for="user in users" track-by="id" v-bind:id="user.id" v-on:click="changeSession(user.id)">
             <img v-bind:src="user.avatar" v-bind:alt="user.name" width="30">
-            <p>{{ user.nickname }} <span v-if="user.id == 0">({{ currentCount }})</span></p>                <div v-bind:class="[ user.has_message ? 'dot' : '' ]"></div>
+            <p>{{ user.nickname }} <span v-if="user.id == 0">({{ currentCount }})</span></p>
+            <div v-bind:class="[ user.has_message ? 'dot' : '' ]"></div>
         </li>
     </ul>
   </div>
@@ -26,14 +27,15 @@
         mixins: [window.mixin],
         data() {
             return {
-                "pageName": "微信",
-                users: this.$store.state.users
+                pageName: "微信",
+                users: this.$store.getters.users,
+                currentCount: this.$store.getters.currentCount
 
             }
         },
 
         created : function(){
-            let conn = new WebSocket('ws://127.0.0.1:9501')
+            let conn = new WebSocket('ws://127.0.0.1:9502')
             let _this = this
             conn.onopen = function(evt){
                 console.log("connect open")
@@ -76,7 +78,14 @@
             _this.$store.dispatch('SETCONN', conn)
         },
 
-
+        methods : {
+            changeSession (userId) {
+                if (typeof userId == 'number') {
+                    this.selectSession(userId);
+                    this.setHasMessageStatus(userId,false);
+                }
+            }
+        }
     }
 </script>
 <style>

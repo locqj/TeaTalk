@@ -28,10 +28,12 @@ router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
         if (store.state.token || window.localStorage.getItem('token')) {  // 通过vuex state获取当前的token是否存在
             next()
-            if (to.path == '/contact') {
-
+            let friends = store.getters.friendslist
+            // 添加朋友列表
+            if (JSON.stringify(friends) == "{}") {
                 let user = JSON.parse(store.state.user)
-                store.commit("getFriendsList", user.user_code)
+                // 后台请求通讯录
+                store.dispatch("getFriendsList", user.user_code)
             }
         } else {
             next({
@@ -53,7 +55,7 @@ axios.interceptors.request.use(
     err => {
         return Promise.reject(err);
     });
- 
+
 // http response 拦截器
 axios.interceptors.response.use(
     response => {

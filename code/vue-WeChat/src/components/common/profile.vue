@@ -109,14 +109,15 @@
         data () {
             return {
                 pageName: "个人信息",
-                userInfo: JSON.parse(this.$store.state.user),
+
+                userInfo: this.$store.state.userInfo,
                 edit: false,
                 intros: '',
                 sheetVisible: false,
             }
         },
         created () {
- 
+
         },
 
     }

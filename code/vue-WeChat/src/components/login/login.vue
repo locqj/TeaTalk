@@ -74,10 +74,11 @@ export default {
                     if (data.code == 1) {
                         const userInfo = data.data.user
                         const token = data.data.token
-                        this.$router.push({path: '/tologin'})
                         storage.setItem('token', token)
                         storage.setItem('userInfo', JSON.stringify(userInfo))
                         this.$store.dispatch('DOLOGIN', token)//调用DOLOGIN的store
+                        this.$router.push({path: '/tologin'})
+
                     } else {
                         Toast({
                             message: '用户名或密码错误',

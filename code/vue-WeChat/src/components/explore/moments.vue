@@ -48,11 +48,11 @@
                             <img :src="it" itemprop="thumbnail" alt="Image description" />
                         </a>
                         <figcaption itemprop="caption description">Image {{ k }}</figcaption>
-                    </figure>                    
+                    </figure>
                 </div>
                 <!-- 资料条 -->
                 <div class="toolbar">
-                    <p class="timestamp">{{ item.time }}</p>    
+                    <p class="timestamp">{{ item.time }}</p>
                     <mt-button id="actionToggle" class="actionToggle" @click.native="sheetVisible = true" @click="changecode(item.code, item.user_code, key, item.user_details.nickname)" v-if="item.dis_zan">...</mt-button>
                     <mt-button id="actionToggle" class="actionToggle" @click.native="sheetVisible1 = true" @click="changecode(item.code, item.user_code, key, item.user_details.nickname)" v-else>...</mt-button>
                 </div>
@@ -64,7 +64,7 @@
 
                 <p  class="contenttext" @click="replayComment(it, item)" > <span v-if="!it.status_first">回复</span><span class="nickname">{{ it.user_name }}</span>To<span class="nickname">{{ it.to_user_name }}:</span><span class="content">{{ it.content }}</span></p>
 
-                
+
 
                 </span>
                 <!-- end 评论 -->
@@ -130,7 +130,7 @@
                 user_zan: false,
                 moment_code:'',
                 moment_user_code:'',
-                userInfo: {},
+                userInfo: this.$store.state.userInfo,
                 moment: {},
                 actions: [],
                 actions2: [],
@@ -148,11 +148,11 @@
                         size,
                         item
                     for (var i = 0; i < numNodes; i++) {
-                        figureEl = thumbElements[i]; 
+                        figureEl = thumbElements[i];
                         if (figureEl.nodeType !== 1) {
                             continue
                         }
-                        linkEl = figureEl.children[0]; 
+                        linkEl = figureEl.children[0];
                         size = linkEl.getAttribute('data-size').split('x')
                         item = {
                             src: linkEl.getAttribute('href'),
@@ -162,7 +162,7 @@
                         if (figureEl.children.length > 1) {
                             item.title = figureEl.children[1].innerHTML
                         }
-                        if (linkEl.children.length > 0) {    
+                        if (linkEl.children.length > 0) {
                             item.msrc = linkEl.children[0].getAttribute('src')
                         }
                         item.el = figureEl
@@ -238,7 +238,7 @@
                         history:false,
                         galleryUID: galleryElement.getAttribute('data-pswp-uid'),
                         getThumbBoundsFn: function (index) {
-                            var thumbnail = items[index].el.getElementsByTagName('img')[0], 
+                            var thumbnail = items[index].el.getElementsByTagName('img')[0],
                                 pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
                                 rect = thumbnail.getBoundingClientRect()
                             return { x: rect.left, y: rect.top + pageYScroll, w: rect.width }
@@ -317,7 +317,7 @@
                         }
                     }
                 })
-                
+
 
 
             },
@@ -356,7 +356,7 @@
                 this.firstcomment.to_user_name = to_user_name
             },
             replayComment(it, item) {
-                
+
                 MessageBox.prompt(' ', '请输入回复').then(({ value }) => {
                     if (value) {
                         this.$http.post('/test/api/docomment', {
@@ -399,14 +399,9 @@
                 name: '评论',
                 method: this.comment
             }];
-      
+
         },
         created () {
-            this.userInfo = this.$store.state.user
-            this.userInfo = JSON.parse(this.userInfo)
-            if (!this.userInfo.img) {
-              this.userInfo.img = "//upload.jianshu.io/users/upload_avatars/2758117/247d868bf5d6.jpeg?imageMogr2/auto-orient/strip|imageView2/1/w/180/h/180"
-            }
             this.$http.get('/test/api/getmoment/'+this.userInfo.user_code)
                 .then((res) => {
                     this.moment = res.data.moments

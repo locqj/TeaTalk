@@ -88,8 +88,8 @@ class WebSocket{
         $this->table->column('avatar', swoole_table::TYPE_STRING, 1024);
         $this->table->column('nickname', swoole_table::TYPE_STRING, 64);
         $this->table->create();
-
         $this->server = $server = new swoole_websocket_server('0.0.0.0',$this->port);
+
         $server->set([
             'task_worker_num' => 4
         ]);
@@ -154,6 +154,7 @@ class WebSocket{
 
     public function message(swoole_websocket_server $server, swoole_websocket_frame $frame){
         $receive = json_decode($frame->data,true);
+        var_dump($frame->data);
         $msg = $this->buildMsg($receive,self::MESSAGE_TYPE);
 
         $task = [
@@ -213,5 +214,5 @@ class WebSocket{
             ]);
     }
 }
-echo "connecting …… 9501";
-new WebSocket(9501);
+echo "connecting …… 9502";
+new WebSocket(9502);

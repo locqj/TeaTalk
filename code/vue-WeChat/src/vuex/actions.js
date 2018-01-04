@@ -46,6 +46,9 @@ export default{
   },
   showNotice : ({ commit }, msg, type) => {
       commit(types.SHOW_NOTICE, msg, type);
+  },
+  getFriendsList : ({ commit }, user_code) => {
+      commit(types.Get_FriendsList, user_code);
   }
 
 }

@@ -38,7 +38,7 @@
                 <mt-button type="default" size="small" >等待通过</mt-button>
             </a>
         </div>
-        
+
     </div>
 </template>
 <script>
@@ -50,20 +50,17 @@
                 talkname: '',
                 users: {},
                 waitacceptusers: {},
-                userInfo: {},
+                userInfo: this.$store.state.userInfo,
                 disusers: false
             }
         },
         created () {
-            this.userInfo = this.$store.state.user
-            this.userInfo = JSON.parse(this.userInfo)
-
             this.$http.get('/test/api/friends/getwaitacceptusers?user_code='+this.userInfo.user_code)
             .then((res) => {
                 this.waitacceptusers = res.data.user_manages
             })
 
-            
+
         },
         mounted() {
 
@@ -90,10 +87,10 @@
                     })
                 })
             }
-            
+
         }
     }
-    
+
 </script>
 <style>
     .add-friend .search-line {
@@ -107,11 +104,11 @@
         border-bottom: 1px solid #d9d9d9;
         margin-top: 20px;
     }
-    
+
     .add-friend .icon-search {
         color: #40b938;
     }
-    
+
     .add-friend .search-line input {
         width: calc(100% - 30px);
         font-size: 16px;
@@ -120,18 +117,18 @@
         outline: none;
         vertical-align: middle;
     }
-    
+
     .add-friend .weui-cell__hd img {
         width: 35px;
         display: block;
         margin-right: 10px;
     }
-    
+
     .add-friend .weui-cell__bd p:last-child {
         font-size: 12px;
         color: #b7b7b7;
     }
-    
+
     .add-friend.weui-cell__bd p:first-child {
         font-size: 15px
     }
@@ -143,7 +140,7 @@
         margin-top: 10%;
         text-align: center;
         color: #b2b2b2;
-        font-size: 18px 
+        font-size: 18px
 
     }
 </style>

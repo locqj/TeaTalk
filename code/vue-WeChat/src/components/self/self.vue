@@ -81,18 +81,13 @@
             const _this = this
             return {
                 pageName: "我",
-                userInfo: this.$store.state.user,
+                userInfo: this.$store.state.userInfo,
                 edit: false,
                 intros: '',
                 sheetVisible: false,
             }
         },
         created () {
-            this.userInfo = JSON.parse(this.$store.state.user)
-            console.log(this.userInfo);　
-            if (!this.userInfo.img) {
-              this.userInfo.img = "//upload.jianshu.io/users/upload_avatars/2758117/247d868bf5d6.jpeg?imageMogr2/auto-orient/strip|imageView2/1/w/180/h/180"
-            }
         },
         mounted() {
             this.$store.commit("toggleTipsStatus", -1)

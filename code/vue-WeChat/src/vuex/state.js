@@ -17,7 +17,7 @@ const state = {
     apiUrl: {
         demo: apiPublicDomain + ""
     },
-    user: {},
+    userInfo: {}, //系统个人信息
     token: null,
     friendslist: {},
     msgList: {

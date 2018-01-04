@@ -54,7 +54,9 @@ const getters = {
 
     currentCount : ({ currentCount }) => currentCount,
 
-    notice : ({ notice }) => notice
+    notice : ({ notice }) => notice,
+
+    friendslist : ({ friendslist }) => friendslist
 }
 
 export default getters

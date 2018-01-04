@@ -85,7 +85,7 @@ export default {
                     })
                 this.$router.push('/explore/moments')
 
-                    
+
                 })
             }
         },
@@ -94,8 +94,7 @@ export default {
         }
     },
       created () {
-            this.userInfo = this.$store.state.user
-            this.userInfo = JSON.parse(this.userInfo)
+            this.userInfo = this.$store.state.userInfo
             this.moment.user_code = this.userInfo.user_code
         },
     components: {

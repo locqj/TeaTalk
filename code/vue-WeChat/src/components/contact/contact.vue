@@ -1,7 +1,7 @@
 <template>
     <div id="contact">
         <section>
-            <search></search>
+            <!-- <search></search> -->
             <div class="weui-cells_contact-head weui-cells weui-cells_access" style="margin-top:-1px">
                 <router-link to="/contact/new-friends" class="weui-cell">
                     <div class="weui-cell_hd"> <img class="img-obj-cover" src="../../assets/images/contact_top-friend-notify.png"> </div>
@@ -20,7 +20,7 @@
                     <div class="weui-cell_bd weui-cell_primary">
                         <p>标签</p>
                     </div>
-                    
+
                 </router-link>
             </div>
             <!--联系人集合-->
@@ -28,7 +28,7 @@
                 <!--首字母-->
                 <div :ref="`key_${key}`" class="weui-cells__title">{{key}}</div>
                 <div class="weui-cells">
-                    <router-link  :to="{path:'/contact/details',query:{code: item.friend_code}}" class="weui-cell weui-cell_access" 
+                    <router-link  :to="{path:'/contact/details',query:{code: item.friend_code}}" class="weui-cell weui-cell_access"
                         v-for="item in value" tag="div">
                         <div class="weui-cell__hd">
                             <img :src="item.head_img" class="home__mini-avatar___1nSrW">
@@ -51,14 +51,14 @@
             return {
                 pageName: "通讯录",
                 userInfo: this.$store.state.user,
-                friends: this.$store.state.friendslist
+                friends: this.$store.getters.friendslist
 
             }
         },
         methods: {
         },
         created() {
-            console.log('test');
+            console.log(this.$store.getters.friendslist);
         },
 
         components: {
@@ -68,5 +68,5 @@
 </script>
 <style>
     @import "../../assets/css/contact.css";
-    
+
 </style>

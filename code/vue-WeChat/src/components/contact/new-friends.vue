@@ -65,7 +65,7 @@
                 waitacceptusers: {},
                 acceptusers: {},
                 refuseusers: {},
-                userInfo: {},
+                userInfo: this.$store.state.userInfo,
             }
         },
         methods: {
@@ -83,7 +83,7 @@
                     })
                     this.accpet_status = 1
 
-                })  
+                })
             },
             refuse(friend_code)　{
                 this.$http.post('/test/api/friends/dorefuse', {
@@ -99,7 +99,6 @@
             }
         },
         created() {
-            this.userInfo = JSON.parse(this.$store.state.user)
             this.$http.get('/test/api/friends/getlist?user_code='+this.userInfo.user_code)
             .then((res) => {
                 this.waitacceptusers = res.data.getWaitFriends

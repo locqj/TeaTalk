@@ -47,11 +47,13 @@ const mutations = {
     cancelMsgStick(state, mid) {
 
     },
+
     //获取通讯录列表
-    getFriendsList(state, user_code) {
+    [types.Get_FriendsList] (state, user_code) {
         axios.get('/test/api/friends/getfriends?own_code='+user_code)
             .then((res) => {
                 state.friendslist = res.data
+                console.log('dofriends');
             })
     },
     // 设置连接
@@ -62,15 +64,18 @@ const mutations = {
       // console.log(state.connection);
 
     },
-    [types.DOLOGIN] (state, data) {
-        state.token = data
-        state.user = localStorage.userInfo
+    [types.DOLOGIN] (state, token) {
+        state.token = token
+        state.userInfo = JSON.parse(localStorage.userInfo)
+        console.log(state.userInfo);
+        console.log('---');
     },
 
     [types.DOLOGOUT] (state) {
         localStorage.removeItem('userInfo')
         localStorage.removeItem('token')
-        state.user = {}
+        state.userInfo = {}
+        state.friendslist = {}
         state.token = null
     },
     // 改变在线状态
@@ -112,6 +117,7 @@ const mutations = {
             user.has_message = false;
             state.users.push(user);
         }
+        console.log("user_list");
         console.log(state.users);
     },
     // 移除用户
