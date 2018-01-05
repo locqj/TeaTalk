@@ -205,11 +205,11 @@
                 let _this = this;
                 let msg = {
                         from : _this.$store.getters.currentUser.id,
-                        to :  _this.$store.getters.currentSession.id,
+                        to :  30,
                         msg : this.msg,//_this.$store.getters.content,
                         date : date
                 };
-                console.log(msg);
+                // console.log(msg);
                  _this.$store.getters.conn.send(JSON.stringify(msg));
 
                 // if ( _this.$store.getters.content !== '' ) {
@@ -231,12 +231,12 @@
     .say-active {
         background: #c6c7ca;
     }
-    #wx-header {
+    /* #wx-header {
         position: fixed;
         top: 0;
         width: 100%
     }
     #wechat-content {
-        margin-top: 10%
-    }
+        margin-top: 12%
+    } */
 </style>

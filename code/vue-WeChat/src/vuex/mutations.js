@@ -53,7 +53,6 @@ const mutations = {
         axios.get('/test/api/friends/getfriends?own_code='+user_code)
             .then((res) => {
                 state.friendslist = res.data
-                console.log('dofriends');
             })
     },
     // 设置连接
@@ -61,14 +60,12 @@ const mutations = {
       if (conn != null && state.connection == null) {
           state.connection = conn;
       }
-      // console.log(state.connection);
-
+      console.log('conn--');
+      console.log(state.connection);
     },
     [types.DOLOGIN] (state, token) {
         state.token = token
         state.userInfo = JSON.parse(localStorage.userInfo)
-        console.log(state.userInfo);
-        console.log('---');
     },
 
     [types.DOLOGOUT] (state) {
@@ -77,16 +74,15 @@ const mutations = {
         state.userInfo = {}
         state.friendslist = {}
         state.token = null
+        state.connection = null
     },
     // 改变在线状态
     [types.CHANGE_STATUS] (state, status) {
         state.online = status
-        console.log(state.online)
     },
     // 过滤用户
     [types.FILTER_USER] (state, nickname) {
         state.filterUser = nickname
-        console.log(state.filterUser);
     },
     [types.CHANGE_SESSION] (state, userId) {
         for (var i = state.users.length - 1; i >= 0; i--) {
@@ -96,13 +92,10 @@ const mutations = {
             state.currentSession = state.users[i];
             break;
         }
-        console.log(state.currentUser);
     },
     // 设置用户
     [types.SET_USER] (state, user) {
         state.currentUser = user
-        console.log("自己的账户");
-        console.log(state.currentUser);
     },
     // 添加用户(用户列表)
     [types.ADD_USER] (state, user) {
@@ -117,20 +110,21 @@ const mutations = {
             user.has_message = false;
             state.users.push(user);
         }
-        console.log("user_list");
-        console.log(state.users);
     },
     // 移除用户
     [types.REMOVE_USER] (state, userId) {
         state.users.forEach((item,index) => {
+
             if (item.id == userId) {
-                state.users.$remove(item);
+                state.users.remove(index);
             }
         })
-        console.log(state.users);
     },
     // 添加信息
     [types.ADD_MESSAGE] (state, message) {
+        // console.log('--');
+        // console.log(message);
+        // console.log('--');
         let msg = {
             user : {
                 id : message.from,
@@ -150,7 +144,7 @@ const mutations = {
                 }
             }
         }
-
+        // 0 是默认群聊 发送接收给默认群聊
         if (message.to == 0) {
             if (state.broadcast[ 0 ] == undefined) {
                 state.broadcast[ 0 ] = new Array;
@@ -158,20 +152,18 @@ const mutations = {
 
             state.broadcast[ 0 ].push(msg);
 
-            state.broadcast.$set(0,state.broadcast[0]);
+            // state.broadcast.set(0,state.broadcast[0]);
         }else{
             if (message.is_self == 1) {
                 message.from = message.to;
             }
-
-
             if (state.broadcast[ message.from ] == undefined) {
                 state.broadcast[ message.from ] = new Array;
             }
 
             state.broadcast[ message.from ].push(msg);
 
-            state.broadcast.$set(message.from,state.broadcast[ message.from ]);
+            // state.broadcast.set(message.from,state.broadcast[ message.from ]);
         }
         console.log(state.broadcast);
     },

@@ -33,7 +33,7 @@
     import WxNav from './components/common/wx-nav'
     import search from './components/common/search'
     import mixin from "./vuex/mixin.js" // 混合被单独放在 mixin.js 中管理
-    window.mixin = mixin // 将 混合/mixin 暴露在窗口对象中，某些组件需要时，直接提取 window.mixin 
+    window.mixin = mixin // 将 混合/mixin 暴露在窗口对象中，某些组件需要时，直接提取 window.mixin
     export default {
         name: 'app',
         components: {
@@ -49,6 +49,42 @@
                 "enterAnimate": "", //页面进入动效
                 "leaveAnimate": "" //页面离开动效
             }
+        },
+        created : function(){
+            let conn = new WebSocket('ws://127.0.0.1:9502')
+            let _this = this
+            conn.onopen = function(evt){
+                console.log("connect open")
+                _this.$store.dispatch('changeStatus', true)
+            }
+            conn.onclose = function(evt){
+                _this.$store.dispatch('changeStatus', false)
+            }
+            conn.onmessage = function(evt){
+                let msg = JSON.parse(evt.data)
+                switch(msg.type){
+                    case 'connect':
+                        _this.$store.dispatch('addUser', msg.data);
+                        _this.$store.dispatch('setCount', msg.data.count);
+                        break;
+                    case 'disconnect':
+                        _this.$store.dispatch('removeUser', msg.data.id);
+                        _this.$store.dispatch('setCount', msg.data.count);
+                        break;
+                    case 'self_init':
+                        _this.$store.dispatch('setUser', msg.data);
+                        _this.$store.dispatch('setCount', msg.data.count);
+                        break;
+                    case 'other_init':
+                        _this.$store.dispatch('addUser', msg.data);
+                        break;
+                    case 'message':
+                        _this.$store.dispatch('addMessage', msg.data);
+                        break;
+                }
+            }
+            // 保存conn
+            this.$store.dispatch('SETCONN', conn)
         },
         watch: {
             // 监听 $route 为店内页设置不同的过渡效果
@@ -74,17 +110,17 @@
 </script>
 <style>
     /*将公用的样式统一在此导入*/
-    
+
     @import "assets/css/base.css";
     @import "assets/css/common.css";
     @import "assets/css/wx-header.css";
     /*阿里 fonticon*/
-    
+
     @import "assets/css/lib/iconfont.css";
     /*过渡效果需要的动画库*/
-    
+
     @import "assets/css/lib/animate.css";
     /*weui 样式库 非常适合高仿微信*/
-    
+
     @import "assets/css/lib/weui.min.css";
 </style>

@@ -9,7 +9,7 @@
                 <span>详细资料</span>
             </div>
         </header>
-        <div class="weui-cells">
+        <div class="weui-cells head-detail">
             <div class="weui-cell">
                 <div class="weui-cell__hd"><img :src="userInfo.head_img" alt="" class="self-header" style="width:60px"></div>
                 <div class="weui-cell__bd">
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <a href="javascript:;" class="weui-btn weui-btn_primary" style="width:90%;margin-top:20px;">发消息</a>
+        <a href="javascript:;" class="weui-btn weui-btn_primary" style="width:90%;margin-top:20px;" @click="send()">发消息</a>
 
     </div>
 </template>
@@ -71,15 +71,21 @@
             }
         },
         created() {
-            
             this.$http.get('/test/api/friends/getuser?user_code='+this.$route.query.code)
             .then((res) => {
-                console.log(res.data.user);
                 this.userInfo = res.data.user
             });
+        },
+        methods: {
+            send() {
+                console.log(this.userInfo);
+                this.$router.push({path: '/wechat/dialogue', query:{ mid: 3, name: this.userInfo.user_details.nickname, group_num: 1}})
+
+            }
         }
     }
 </script>
 <style>
-
+    .head-detail {
+    }
 </style>

@@ -33,51 +33,6 @@
 
             }
         },
-
-        created : function(){
-            let conn = new WebSocket('ws://127.0.0.1:9502')
-            let _this = this
-            conn.onopen = function(evt){
-                console.log("connect open")
-                _this.$store.dispatch('changeStatus', true)
-            }
-            conn.onclose = function(evt){
-                console.log("connect close")
-                _this.$store.dispatch('changeStatus', false)
-            }
-            conn.onmessage = function(evt){
-                console.log("message")
-                let msg = JSON.parse(evt.data)
-                switch(msg.type){
-                    case 'connect':
-                        _this.$store.dispatch('addUser', msg.data);
-                        _this.$store.dispatch('setCount', msg.data.count);
-                        console.log("message-conn")
-                        break;
-                    case 'disconnect':
-                        _this.$store.dispatch('removeUser', msg.data.id);
-                        _this.$store.dispatch('setCount', msg.data.count);
-                        console.log("message-disconn")
-                        break;
-                    case 'self_init':
-                        _this.$store.dispatch('setUser', msg.data);
-                        _this.$store.dispatch('setCount', msg.data.count);
-                        console.log("message-self-init");
-                        break;
-                    case 'other_init':
-                        _this.$store.dispatch('addUser', msg.data);
-                        console.log("message-adduser");
-                        break;
-                    case 'message':
-                        _this.$store.dispatch('addMessage', msg.data);
-                        console.log("message-addMsg");
-                        break;
-                }
-            }
-            // 保存conn
-            _this.$store.dispatch('SETCONN', conn)
-        },
-
         methods : {
             changeSession (userId) {
                 if (typeof userId == 'number') {

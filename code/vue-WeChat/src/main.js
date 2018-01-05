@@ -31,7 +31,7 @@ router.beforeEach((to, from, next) => {
             let friends = store.getters.friendslist
             // 添加朋友列表
             if (JSON.stringify(friends) == "{}") {
-                let user = JSON.parse(store.state.user)
+                let user = store.state.userInfo
                 // 后台请求通讯录
                 store.dispatch("getFriendsList", user.user_code)
             }
