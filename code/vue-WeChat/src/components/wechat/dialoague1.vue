@@ -1,10 +1,7 @@
 <template>
     <div class="dialogue">
         <header id="wx-header">
-            <div class="other">
-                <router-link :to="{path:'/wechat/dialogue/dialogue-info',query: { msgInfo: msgInfo}}" tag="span" class="iconfont icon-chat-group" v-show="$route.query.group_num&&$route.query.group_num!=1"></router-link>
-                <router-link :to="{path:'/wechat/dialogue/dialogue-detail',query: { msgInfo: msgInfo}}" tag="span" class="iconfont icon-chat-friends" v-show="$route.query.group_num==1"></router-link>
-            </div>
+
             <div class="center">
                 <router-link to="/" tag="div" class="iconfont icon-return-arrow">
                     <span>微信</span>
@@ -14,16 +11,18 @@
             </div>
         </header>
         <section class="dialogue-section clearfix" id="wechat-content" v-on:click="MenuOutsideClick">
-            <div class="row clearfix" v-for="item in msgInfo.msg">
-                <img :src="item.headerUrl" class="header">
-                <p class="text" v-more>{{item.text}}</p>
+            <div class="row clearfix" :class="$store.getters.currentUser.id == item.user.id ? 'self' : ''" v-for="item in msgInfo[$store.getters.currentSession.id]">
+                <img v-bind:src="item.user.avatar" v-bind:alt="item.user.nickname" :class="$store.getters.currentUser.id == item.user.id ? 'selfheader' : 'header'">
+                <p :class="$store.getters.currentUser.id == item.user.id ? 'textself' : 'text'" v-more>{{ item.msg }}</p>
             </div>
-            <span class="msg-more" id="msg-more"><ul>
+            <span class="msg-more" id="msg-more">
+                <ul>
                     <li>复制</li>
                     <li>转发</li>
                     <li>收藏</li>
                     <li>删除</li>
-                </ul></span>
+                </ul>
+            </span>
         </section>
         <footer class="dialogue-footer">
             <div class="component-dialogue-bar-person">
@@ -76,7 +75,7 @@
                 currentChatWay: true, //ture为键盘打字 false为语音输入
                 timer: null,
                     // sayActive: false // false 键盘打字 true 语音输入
-                msg: ""
+                msg: "",
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -86,14 +85,9 @@
         },
         computed: {
             msgInfo() {
-                for (var i in this.$store.state.msgList.baseMsg) {
-                    if (this.$store.state.msgList.baseMsg[i].mid == this.$route.query.mid) {
-                        return this.$store.state.msgList.baseMsg[i]
-                    }
-                }
+                return this.$store.getters.broadcast
             }
         },
-
         directives: {
             press: {
                 inserted(element, binding) {
@@ -147,6 +141,7 @@
                     }, false);
                 }
             },
+            // 长按信息拦操作
             more: {
                 bind(element, binding) {
                     var startTx, startTy
@@ -200,29 +195,29 @@
                     container.forEach(item=>item.style.backgroundColor='#fff')
                 }
             },
-            // // 信息发送
-            // send(e){
-            //     let date = new Date().toLocaleString();
-            //     let _this = this;
-            //     let msg = {
-            //             from : _this.$store.getters.currentUser.id,
-            //             to :  30,
-            //             msg : this.msg,//_this.$store.getters.content,
-            //             date : date
-            //     };
-            //     // console.log(msg);
-            //     if ( this.msg !== '' ) {
-            //          _this.$store.getters.conn.send(JSON.stringify(msg));
-            //          this.msg = '';
-            //          msg.is_self = 1;
-            //          _this.$store.dispatch('addMessage', msg);
-            //          console.log('done');
-            //     }else{
-            //         console.log("msg not null");
-            //          // _this.$store.getters.showNotice(' 消息不能为空!','warning');
-            //     }
-            //
-            // }
+            // 信息发送
+            send(e){
+                let date = new Date().toLocaleString();
+                let _this = this;
+                let msg = {
+                        from : _this.$store.getters.currentUser.id,
+                        to :  _this.$store.getters.currentSession.id,
+                        msg : this.msg,//_this.$store.getters.content,
+                        date : date
+                };
+                // console.log(msg);
+                if ( this.msg !== '' ) {
+                     _this.$store.getters.conn.send(JSON.stringify(msg));
+                     this.msg = '';
+                     msg.is_self = 1;
+                     _this.$store.dispatch('addMessage', msg);
+                     console.log('done');
+                }else{
+                    console.log("msg not null");
+                     // _this.$store.getters.showNotice(' 消息不能为空!','warning');
+                }
+
+            }
         }
     }
 </script>

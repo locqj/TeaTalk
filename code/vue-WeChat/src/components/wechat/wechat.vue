@@ -8,7 +8,7 @@
     <!-- tests -->
     <hr style="margin-top: 120px">
     <ul>
-        <li v-for="user in users" track-by="id" v-bind:id="user.id" v-on:click="changeSession(user.id)">
+        <li v-for="user in users" track-by="id" v-bind:id="user.id" v-on:click="changeSession(user.id, user.nickname)" v-if="user.id != $store.state.currentUser.id">
             <img v-bind:src="user.avatar" v-bind:alt="user.name" width="30">
             <p>{{ user.nickname }} <span v-if="user.id == 0">({{ currentCount }})</span></p>
             <div v-bind:class="[ user.has_message ? 'dot' : '' ]"></div>
@@ -19,10 +19,12 @@
 <script>
     import search from "../common/search"
     import msgItem from "../wechat/msg-item"
+    import msgItem1 from "../wechat/msg-item1"
     export default {
         components: {
             search,
-            msgItem
+            msgItem,
+            msgItem1
         },
         mixins: [window.mixin],
         data() {
@@ -34,10 +36,12 @@
             }
         },
         methods : {
-            changeSession (userId) {
+            changeSession (userId, nickname) {
+                console.log(userId)
+                this.$router.push({path: '/wechat/dialogue1', query: { name: nickname}})
                 if (typeof userId == 'number') {
-                    this.selectSession(userId);
-                    this.setHasMessageStatus(userId,false);
+                    this.$store.dispatch('selectSession', userId)
+                    // this.setHasMessageStatus(userId,false);
                 }
             }
         }

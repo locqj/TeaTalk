@@ -101,7 +101,8 @@ class WebSocket{
         $server->start();
     }
     public function open(swoole_websocket_server $server, swoole_http_request $req){
-        var_dump($req->fd);
+        $a = 'connect,fd:'.$req->fd;
+        var_dump($a);
         $avatar = $this->avatars[array_rand($this->avatars)];
         $nickname = $this->nicknames[array_rand($this->nicknames)];
 
@@ -181,6 +182,8 @@ class WebSocket{
                 'except' => [$fd],
                 'data' => $msg
             ]);
+        $a = 'close:'.$fd;
+        var_dump($a);
     }
 
     public function task($server, $task_id, $from_id, $data){
@@ -214,5 +217,5 @@ class WebSocket{
             ]);
     }
 }
-echo "connecting …… 9502";
+var_dump("connecting …… 9502");
 new WebSocket(9502);

@@ -15,3 +15,6 @@
 
 ### 1-5-2018
 * 从用户详情点击发送信息到聊天的时候，如果将header置顶不滑动，退回用户详情页会乱
+
+### 1-8-2018
+* http://localhost:8080/#/wechat/dialogue1?name=test&userid=112 改掉userid 存到state这样保持 userid能和服务器对应的id保持一致

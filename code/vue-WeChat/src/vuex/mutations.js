@@ -2,7 +2,7 @@ import * as types from './types'
 
 
 import axios from 'axios'
-
+import Vue from 'vue'
 const mutations = {
     //切换语言 后期需要
     switchLang(state, lang) {
@@ -49,7 +49,7 @@ const mutations = {
     },
 
     //获取通讯录列表
-    [types.Get_FriendsList] (state, user_code) {
+    [types.GET_FRIENDLIST] (state, user_code) {
         axios.get('/test/api/friends/getfriends?own_code='+user_code)
             .then((res) => {
                 state.friendslist = res.data
@@ -84,6 +84,7 @@ const mutations = {
     [types.FILTER_USER] (state, nickname) {
         state.filterUser = nickname
     },
+    //在线用户id
     [types.CHANGE_SESSION] (state, userId) {
         for (var i = state.users.length - 1; i >= 0; i--) {
             if (state.users[i].id != userId) {
@@ -110,21 +111,19 @@ const mutations = {
             user.has_message = false;
             state.users.push(user);
         }
+        console.log('users');
+        console.log(state.users);
     },
     // 移除用户
     [types.REMOVE_USER] (state, userId) {
         state.users.forEach((item,index) => {
-
             if (item.id == userId) {
-                state.users.remove(index);
+                state.users.splice(index) //2.0没有$remove 换成 splice
             }
         })
     },
     // 添加信息
     [types.ADD_MESSAGE] (state, message) {
-        // console.log('--');
-        // console.log(message);
-        // console.log('--');
         let msg = {
             user : {
                 id : message.from,
@@ -134,6 +133,7 @@ const mutations = {
             msg : message.msg,
             time : message.date
         };
+        // 赋值给msg中的user
         if (message.from == state.currentUser.id) {
             msg.user = state.currentUser;
         }else{
@@ -144,15 +144,13 @@ const mutations = {
                 }
             }
         }
-        // 0 是默认群聊 发送接收给默认群聊
+        // to=0群聊
         if (message.to == 0) {
             if (state.broadcast[ 0 ] == undefined) {
                 state.broadcast[ 0 ] = new Array;
             }
-
             state.broadcast[ 0 ].push(msg);
-
-            // state.broadcast.set(0,state.broadcast[0]);
+            Vue.set(state.broadcast, 0, state.broadcast[0]);
         }else{
             if (message.is_self == 1) {
                 message.from = message.to;
@@ -160,10 +158,9 @@ const mutations = {
             if (state.broadcast[ message.from ] == undefined) {
                 state.broadcast[ message.from ] = new Array;
             }
-
             state.broadcast[ message.from ].push(msg);
-
-            // state.broadcast.set(message.from,state.broadcast[ message.from ]);
+            // 保持数据视图一致性，确保数据实时性，动态数据相应
+            Vue.set(state.broadcast, message.from, state.broadcast[ message.from ]);
         }
         console.log(state.broadcast);
     },
@@ -178,6 +175,8 @@ const mutations = {
     // 统计发送个数
     [types.SET_COUNT] (state, count) {
         state.currentCount = count;
+        console.log('set-count');
+        console.log(state.currentCount);
     },
     // 提示
     [types.SHOW_NOTICE] (state, msg, type) {

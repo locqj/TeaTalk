@@ -48,7 +48,14 @@ export default{
       commit(types.SHOW_NOTICE, msg, type);
   },
   getFriendsList : ({ commit }, user_code) => {
-      commit(types.Get_FriendsList, user_code);
-  }
+      commit(types.GET_FRIENDLIST, user_code);
+  },
+  searchUser: ({ commit }, filterUser) => {
+      commit(types.FILTER_USER, filterUser);
+  },
+
+  selectSession : ({ commit }, userId) => {
+      commit(types.CHANGE_SESSION, userId);
+  },
 
 }

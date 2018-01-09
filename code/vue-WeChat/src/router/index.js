@@ -17,8 +17,8 @@ const routes = [{
         component: resolve => require(["../components/wechat/wechat.vue"], resolve),
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
-    }, {
+            }
+    },{
         path: '/wechat/dialogue',
         name: "",
         components: {
@@ -27,9 +27,18 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
-    },
-    {
+            }
+    },{
+       path: '/wechat/dialogue1',
+       name: "",
+       components: {
+           "default": resolve => require(["../components/wechat/wechat.vue"], resolve),
+           "subPage": resolve => require(["../components/wechat/dialoague1.vue"], resolve)
+       },
+       meta: {
+               requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+           }
+   },{
         path: '/wehchat/add-friend',
         name: "",
         components: {
@@ -38,7 +47,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/wechat/dialogue/dialogue-info',
@@ -48,7 +57,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/wechat/dialogue/dialogue-detail',
@@ -58,7 +67,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/contact',
@@ -69,7 +78,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/contact/add-friend',
@@ -80,7 +89,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/contact/details',
@@ -91,7 +100,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/contact/new-friends/mobile-contacts',
@@ -101,7 +110,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/contact/official-accounts',
@@ -112,7 +121,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/contact/group-list',
@@ -123,7 +132,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/contact/new-friends',
@@ -134,7 +143,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     }, {
         path: '/contact/tags',
         name: "新的朋友",
@@ -144,14 +153,14 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     }, {
         path: '/explore',
         name: "发现",
         component: resolve => require(["../components/explore/explore.vue"], resolve),
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     }, {
         path: '/explore/moments',
         name: "朋友圈",
@@ -161,7 +170,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     }, {
         path: '/explore/moments/new',
         name: "添加朋友圈",
@@ -171,7 +180,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     }, {
         path: '/self',
         name: "我",
@@ -181,65 +190,65 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },{
         path: '/self/album',
         components: { "default": resolve => require(["../components/self/self.vue"], resolve), "subPage": resolve => require(["../components/common/album.vue"], resolve) },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/self/settings',
         components: { "default": resolve => require(["../components/self/self.vue"], resolve), "subPage": resolve => require(["../components/self/settings.vue"], resolve) },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     }, {
         path: '/self/settings/security',
         components: { "subPage": resolve => require(["../components/self/settings/security.vue"], resolve) },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/self/settings/notice',
         components: { "subPage": resolve => require(["../components/self/settings/notice.vue"], resolve) },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/self/settings/privacy',
         components: { "subPage": resolve => require(["../components/self/settings/privacy.vue"], resolve) },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     }, {
         path: '/self/settings/common',
         components: { "subPage": resolve => require(["../components/self/settings/common.vue"], resolve) },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/self/profile',
         components: { "default": resolve => require(["../components/self/self.vue"], resolve), "subPage": resolve => require(["../components/common/profile.vue"], resolve) },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     }, {
         path: '/self/profile/my-qrcode',
         components: { "subPage": resolve => require(["../components/self/my-qrcode.vue"], resolve) },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     }, {
         path: '/self/settings',
         components: { "subPage": resolve => require(["../components/settings/settings.vue"], resolve) },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/self/settings/common',
@@ -248,7 +257,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     {
         path: '/self/settings/common/language',
@@ -257,7 +266,7 @@ const routes = [{
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            } 
+            }
     },
     { path: '/tologin', redirect: '/' },
     { path: '/tologout', redirect: '/login' }
