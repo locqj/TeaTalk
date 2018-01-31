@@ -27,41 +27,6 @@
 
           </div>
         </router-link>
-        <!-- <router-link to="/self/album" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="../../assets/images/me_more-my-favorites.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>收藏</p>
-          </div>
-        </router-link>
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="../../assets/images/me_more-my-bank-card.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>钱包</p>
-          </div>
-        </router-link>
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="../../assets/images/me_my-card-package-icon.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>卡券</p>
-          </div>
-        </router-link>
-      </div>
-      <div class="weui-cells">
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="../../assets/images/me_more-expression.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>表情</p>
-          </div>
-        </router-link>
-      </div> -->
         <router-link to="/self/settings" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_more-setting.png">
@@ -88,6 +53,7 @@
             }
         },
         created () {
+            console.log('self-create');
         },
         mounted() {
             this.$store.commit("toggleTipsStatus", -1)

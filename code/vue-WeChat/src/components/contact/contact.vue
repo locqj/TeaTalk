@@ -52,12 +52,12 @@
                 pageName: "通讯录",
                 userInfo: this.$store.state.user,
                 friends: this.$store.getters.friendslist
-
             }
         },
         methods: {
         },
         created() {
+            console.log('created-contact');
             console.log(this.$store.getters.friendslist);
         },
 

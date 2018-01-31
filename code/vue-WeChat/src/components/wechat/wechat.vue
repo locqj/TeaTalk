@@ -35,9 +35,48 @@
 
             }
         },
+        created : function(){
+            console.log('created-wechat');
+            let user_code = this.$store.state.userInfo.user_code
+            let nickname = this.$store.state.userInfo.nickname
+            let img = this.$store.state.userInfo.img
+            let conn = new WebSocket("ws://127.0.0.1:9502?user_code=" + user_code + "&nickname=" + nickname + "&img="+ img)
+            let _this = this
+            conn.onopen = function(evt){
+                _this.$store.dispatch('changeStatus', true)
+            }
+            conn.onclose = function(evt){
+                _this.$store.dispatch('changeStatus', false)
+            }
+            conn.onmessage = function(evt){
+                let msg = JSON.parse(evt.data)
+                switch(msg.type){
+                    case 'connect':
+                        _this.$store.dispatch('addUser', msg.data);
+                        _this.$store.dispatch('setCount', msg.data.count);
+                        break;
+                    case 'disconnect':
+                        _this.$store.dispatch('removeUser', msg.data.id);
+                        _this.$store.dispatch('setCount', msg.data.count);
+                        break;
+                    case 'self_init':
+                        _this.$store.dispatch('setUser', msg.data);
+                        _this.$store.dispatch('setCount', msg.data.count);
+                        break;
+                    case 'other_init':
+                        _this.$store.dispatch('addUser', msg.data);
+                        break;
+                    case 'message':
+                        _this.$store.dispatch('addMessage', msg.data);
+                        break;
+                }
+            }
+            // 保存conn
+            this.$store.dispatch('SETCONN', conn)
+        },
+
         methods : {
             changeSession (userId, nickname) {
-                console.log(userId)
                 this.$router.push({path: '/wechat/dialogue1', query: { name: nickname}})
                 if (typeof userId == 'number') {
                     this.$store.dispatch('selectSession', userId)

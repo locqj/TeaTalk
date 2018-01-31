@@ -13,7 +13,7 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class AuthController extends Controller
-{   
+{
     public function _initialize()
     {
         $this->cross();
@@ -40,7 +40,7 @@ class AuthController extends Controller
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             return response()->json(['error' => 'could_not_create_token'], 500);
-        }        
+        }
         // all good so return the token
         // return $credentials;
         $user = new User();

@@ -14,7 +14,9 @@ const routes = [{
     },{
         path: '/',
         name: "微信",
-        component: resolve => require(["../components/wechat/wechat.vue"], resolve),
+        components: {
+            "default": resolve => require(["../components/wechat/wechat.vue"], resolve),
+        },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             }
@@ -72,10 +74,7 @@ const routes = [{
     {
         path: '/contact',
         name: "通讯录",
-        components: {
-            "default": resolve => require(["../components/wechat/wechat.vue"], resolve),
-            "subPage": resolve => require(["../components/contact/contact.vue"], resolve)
-        },
+        component: resolve => require(["../components/contact/contact.vue"], resolve),
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             }
@@ -101,18 +100,7 @@ const routes = [{
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             }
-    },
-    {
-        path: '/contact/new-friends/mobile-contacts',
-        name: "通讯录朋友",
-        components: {
-            "subPage": resolve => require(["../components/contact/mobile-contacts.vue"], resolve)
-        },
-        meta: {
-                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            }
-    },
-    {
+    }, {
         path: '/contact/official-accounts',
         name: "",
         components: {
@@ -184,53 +172,31 @@ const routes = [{
     }, {
         path: '/self',
         name: "我",
-        components: {
-            "default": resolve => require(["../components/wechat/wechat.vue"], resolve),
-            "subPage": resolve => require(["../components/self/self.vue"], resolve)
-        },
+        component: resolve => require(["../components/self/self.vue"], resolve),
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             }
     },{
         path: '/self/album',
-        components: { "default": resolve => require(["../components/self/self.vue"], resolve), "subPage": resolve => require(["../components/common/album.vue"], resolve) },
+        components: {
+            "default": resolve => require(["../components/self/self.vue"], resolve),
+            "subPage": resolve => require(["../components/common/album.vue"], resolve)
+        },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             }
     },
     {
         path: '/self/settings',
-        components: { "default": resolve => require(["../components/self/self.vue"], resolve), "subPage": resolve => require(["../components/self/settings.vue"], resolve) },
-        meta: {
-                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            }
-    }, {
-        path: '/self/settings/security',
-        components: { "subPage": resolve => require(["../components/self/settings/security.vue"], resolve) },
-        meta: {
-                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            }
-    },
-    {
-        path: '/self/settings/notice',
-        components: { "subPage": resolve => require(["../components/self/settings/notice.vue"], resolve) },
+        components: {
+            "default": resolve => require(["../components/self/self.vue"], resolve),
+            "subPage": resolve => require(["../components/self/settings.vue"], resolve)
+        },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             }
     },
-    {
-        path: '/self/settings/privacy',
-        components: { "subPage": resolve => require(["../components/self/settings/privacy.vue"], resolve) },
-        meta: {
-                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            }
-    }, {
-        path: '/self/settings/common',
-        components: { "subPage": resolve => require(["../components/self/settings/common.vue"], resolve) },
-        meta: {
-                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            }
-    },
+
     {
         path: '/self/profile',
         components: { "default": resolve => require(["../components/self/self.vue"], resolve), "subPage": resolve => require(["../components/common/profile.vue"], resolve) },
@@ -240,30 +206,6 @@ const routes = [{
     }, {
         path: '/self/profile/my-qrcode',
         components: { "subPage": resolve => require(["../components/self/my-qrcode.vue"], resolve) },
-        meta: {
-                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            }
-    }, {
-        path: '/self/settings',
-        components: { "subPage": resolve => require(["../components/settings/settings.vue"], resolve) },
-        meta: {
-                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            }
-    },
-    {
-        path: '/self/settings/common',
-        components: {
-            "subPage": resolve => require(["../components/settings/common/common.vue"], resolve)
-        },
-        meta: {
-                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            }
-    },
-    {
-        path: '/self/settings/common/language',
-        components: {
-            "subPage": resolve => require(["../components/settings/common/language.vue"], resolve)
-        },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             }

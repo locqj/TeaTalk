@@ -18,3 +18,6 @@
 
 ### 1-8-2018
 * http://localhost:8080/#/wechat/dialogue1?name=test&userid=112 改掉userid 存到state这样保持 userid能和服务器对应的id保持一致
+
+### 1-31-2018
+* http://localhost:8080/#/contact/new-friends img的问题 json没有解析

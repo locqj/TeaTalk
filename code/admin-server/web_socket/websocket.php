@@ -103,20 +103,26 @@ class WebSocket{
     public function open(swoole_websocket_server $server, swoole_http_request $req){
         $a = 'connect,fd:'.$req->fd;
         var_dump($a);
-        $avatar = $this->avatars[array_rand($this->avatars)];
-        $nickname = $this->nicknames[array_rand($this->nicknames)];
+        // var_dump($req->get['user_code']);
+        // var_dump($req->get['nickname']);
+        // var_dump($req->get['img']);
+        //
+        // $avatar = $this->avatars[array_rand($this->avatars)];
+        // $nickname = $this->nicknames[array_rand($this->nicknames)];
 
         $this->table->set($req->fd,[
                 'id' => $req->fd,
-                'avatar' => $avatar,
-                'nickname' => $nickname
+                'avatar' => $req->get['img'],
+                'nickname' => $req->get['nickname'],
+                'user_code' => $req->get['user_code']
             ]);
 
         //init selfs data
         $userMsg = $this->buildMsg([
                 'id' => $req->fd,
-                'avatar' => $avatar,
-                'nickname' => $nickname,
+                'avatar' => $req->get['img'],
+                'nickname' => $req->get['nickname'],
+                'user_code' => $req->get['user_code'],
                 'count' => count($this->table)
             ],self::INIT_SELF_TYPE);
         $this->server->task([
@@ -142,8 +148,9 @@ class WebSocket{
         //broadcast a user is online
         $msg = $this->buildMsg([
                 'id' => $req->fd,
-                'avatar' => $avatar,
-                'nickname' => $nickname,
+                'avatar' => $req->get['img'],
+                'nickname' => $req->get['nickname'],
+                'user_code' => $req->get['user_code'],
                 'count' => count($this->table)
             ],self::CONNECT_TYPE);
         $this->server->task([

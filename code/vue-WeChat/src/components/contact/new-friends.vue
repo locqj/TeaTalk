@@ -16,7 +16,7 @@
                 <div class="weui-cell__hd">
                     <img :src="item.head_img" alt=""> </div>
                 <div class="weui-cell__bd weui-cell_primary">
-                    <p><b>{{item.a_users.name}}</b></p>
+                    <p><b>{{item.a_user_details.nickname}}</b></p>
                     <p><span>{{item.school_name}}-{{item.department_name}}</span></p>
                 </div>
                 <div class="weui-cell__ft">已添加</div>
@@ -37,7 +37,7 @@
                 <div class="weui-cell__hd">
                     <img :src="item.head_img" alt=""></div>
                 <div class="weui-cell__bd weui-cell_primary">
-                    <p><b>{{ item.a_users.name }}</b></p>
+                    <p><b>{{ item.a_user_details.nickname }}</b></p>
                     <p><span>{{item.school_name}}--{{item.department_name}}</span></p>
                 </div>
                 <div class="weui-cell_ft" v-if="accpet_status == 0">

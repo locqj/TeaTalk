@@ -60,8 +60,6 @@ const mutations = {
       if (conn != null && state.connection == null) {
           state.connection = conn;
       }
-      console.log('conn--');
-      console.log(state.connection);
     },
     [types.DOLOGIN] (state, token) {
         state.token = token
@@ -69,12 +67,14 @@ const mutations = {
     },
 
     [types.DOLOGOUT] (state) {
+
         localStorage.removeItem('userInfo')
         localStorage.removeItem('token')
         state.userInfo = {}
         state.friendslist = {}
         state.token = null
         state.connection = null
+
     },
     // 改变在线状态
     [types.CHANGE_STATUS] (state, status) {
@@ -96,10 +96,19 @@ const mutations = {
     },
     // 设置用户
     [types.SET_USER] (state, user) {
+        // state.userInfo.socket = user
         state.currentUser = user
+        // state.currentUser.name = state.userInfo.nickname
+        // state.currentUser.nickname = state.userInfo.nickname
+        // state.currentUser.avatar = state.userInfo.img
+        // state.currentUser.user_code = state.userInfo.user_code
+
+
     },
     // 添加用户(用户列表)
     [types.ADD_USER] (state, user) {
+        console.log('asd');
+        console.log(user);
         if (user instanceof Array) {
             for (var i = user.length - 1; i >= 0; i--) {
                 if (user[i].id != state.currentUser.id) {
@@ -116,6 +125,7 @@ const mutations = {
     },
     // 移除用户
     [types.REMOVE_USER] (state, userId) {
+        console.log('remove');
         state.users.forEach((item,index) => {
             if (item.id == userId) {
                 state.users.splice(index) //2.0没有$remove 换成 splice
