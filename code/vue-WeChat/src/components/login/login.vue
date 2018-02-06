@@ -43,6 +43,7 @@
 </template>
 <script>
 import { Toast } from 'mint-ui'
+import utils from '../../utils'
 export default {
     data(){
         return{
@@ -54,6 +55,30 @@ export default {
         }
     },
     methods: {
+        getPosition() {
+            const storage = window.localStorage
+            var geolocation = new BMap.Geolocation();
+
+            geolocation.getCurrentPosition(function(r){
+            	if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                    var map = new BMap.Map()
+                    let position = new BMap.Point(r.point.lng, r.point.lat)
+                    position = JSON.stringify(position)
+                    storage.setItem('position', position)
+
+                    let position1 = new BMap.Point(106.486654, 29.490295)
+                    let position2 = new BMap.Point(106.486654, 29.490295)
+
+                    // let position2 = new BMap.Point(106.586654, 29.490295)
+                    console.log(position1);
+                    let distance = map.getDistance(position1, position2)
+
+                    console.log('距离'+distance);
+            	}
+            });
+            // utils.getLocation()
+            // console.log('ok');
+        },
         login () {
             const storage = window.localStorage
             if (!this.userInfo.name) {
@@ -68,7 +93,8 @@ export default {
 
                 })
             } else {
-              this.$http.post('/test/api/user/login', this.userInfo)
+                this.getPosition()
+                this.$http.post('/test/api/user/login', this.userInfo)
                 .then((res) => {
                     const data = res.data.original
                     if (data.code == 1) {

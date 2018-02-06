@@ -11,10 +11,13 @@
             </div>
         </header>
         <section class="dialogue-section clearfix" id="wechat-content" v-on:click="MenuOutsideClick">
+            <!-- 聊天信息 -->
             <div class="row clearfix" :class="$store.getters.currentUser.id == item.user.id ? 'self' : ''" v-for="item in msgInfo[$store.getters.currentSession.id]">
                 <img v-bind:src="item.user.avatar" v-bind:alt="item.user.nickname" :class="$store.getters.currentUser.id == item.user.id ? 'selfheader' : 'header'">
-                <p :class="$store.getters.currentUser.id == item.user.id ? 'textself' : 'text'" v-more>{{ item.msg }}</p>
+                <p :class="$store.getters.currentUser.id == item.user.id ? 'textself' : 'text'" v-more>{{ item.msg }}-{{item.type}}</p>
             </div>
+            <!-- 聊天信息 -->
+
             <span class="msg-more" id="msg-more">
                 <ul>
                     <li>复制</li>
@@ -27,6 +30,8 @@
         <footer class="dialogue-footer">
             <div class="component-dialogue-bar-person">
                 <span class="iconfont icon-dialogue-jianpan" v-show="!currentChatWay" v-on:click="currentChatWay=true"></span>
+                <!-- 距离获取 -->
+                <span class="more iconfont icon-dialogue-jia" v-on:click="location"></span>
                 <span class="more iconfont icon-dialogue-jia"></span>
                 <!-- <span class="iconfont icon-dialogue-voice" v-show="currentChatWay" v-on:click="currentChatWay=false"></span> -->
                 <div class="chat-way" v-show="!currentChatWay">
@@ -76,12 +81,16 @@
                 timer: null,
                     // sayActive: false // false 键盘打字 true 语音输入
                 msg: "",
+                location_btn: true
             }
         },
         beforeRouteEnter(to, from, next) {
             next(vm => {
                 vm.$store.commit("setPageName", vm.$route.query.name)
             })
+        },
+        created: function () {
+
         },
         computed: {
             msgInfo() {
@@ -196,14 +205,16 @@
                 }
             },
             // 信息发送
-            send(e){
+            send(e) {
                 let date = new Date().toLocaleString();
                 let _this = this;
                 let msg = {
                         from : _this.$store.getters.currentUser.id,
                         to :  _this.$store.getters.currentSession.id,
                         msg : this.msg,//_this.$store.getters.content,
-                        date : date
+                        date : date,
+                        type: 'msg'
+
                 };
                 // console.log(msg);
                 if ( this.msg !== '' ) {
@@ -217,6 +228,81 @@
                      // _this.$store.getters.showNotice(' 消息不能为空!','warning');
                 }
 
+            },
+            location() {
+                let _this = this;
+                var map = new BMap.Map()
+                const storage = window.localStorage
+                let position = storage.getItem('position')
+                let date = new Date().toLocaleString();
+
+
+                // 获取最后条信息
+                let data = _this.$store.getters.broadcast[0]
+                if (data) {
+                    data = data[data.length - 1]
+                    if (data.type == 'location') {
+                        console.log(_this.location_btn);
+                        if (_this.location_btn) {
+                            position = JSON.parse(position)
+                            position = new BMap.Point(position.lng, position.lat)
+                            let position_other = JSON.parse(data.position)
+                            position_other = new BMap.Point(position_other.lng, position_other.lat)
+
+                            let distance = map.getDistance(position, position_other)
+
+                            let msg = {
+                                    from : _this.$store.getters.currentUser.id,
+                                    to :  _this.$store.getters.currentSession.id,
+                                    msg : '距离'+distance+'米',//_this.$store.getters.content,
+                                    date : date,
+                                    type: 'location'
+                            };
+                             _this.$store.getters.conn.send(JSON.stringify(msg));
+                             msg.is_self = 1;
+                             _this.$store.dispatch('addMessage', msg);
+                             console.log('done');
+                        } else {
+                            console.log('nonono');
+                        }
+                    } else {
+                        position = JSON.parse(position)
+                        position = new BMap.Point(position.lng, position.lat)
+                        let distance = map.getDistance(position, position)
+                        position = JSON.stringify(position)
+                        let msg = {
+                                from : _this.$store.getters.currentUser.id,
+                                to :  _this.$store.getters.currentSession.id,
+                                msg : '发送位置信息',//_this.$store.getters.content,
+                                date : date,
+                                position: position,
+                                type: 'location'
+                        };
+                         _this.$store.getters.conn.send(JSON.stringify(msg));
+                         msg.is_self = 1;
+                         _this.$store.dispatch('addMessage', msg);
+                         _this.location_btn = false
+                         console.log('done');
+                    }
+                } else {
+                    position = JSON.parse(position)
+                    position = new BMap.Point(position.lng, position.lat)
+                    let distance = map.getDistance(position, position)
+                    position = JSON.stringify(position)
+                    let msg = {
+                            from : _this.$store.getters.currentUser.id,
+                            to :  _this.$store.getters.currentSession.id,
+                            msg : '发送位置信息',//_this.$store.getters.content,
+                            date : date,
+                            position: position,
+                            type: 'location'
+                    };
+                     _this.$store.getters.conn.send(JSON.stringify(msg));
+                     msg.is_self = 1;
+                     _this.$store.dispatch('addMessage', msg);
+                     _this.location_btn = false
+                     console.log('done');
+                }
             }
         }
     }

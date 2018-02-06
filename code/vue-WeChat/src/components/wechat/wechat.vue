@@ -3,15 +3,27 @@
   <div id="wechat">
     <ul class="wechat-list">
         <!--props传递消息对象 baseMsgObj -->
-        <msg-item v-for="baseMsgObj in $store.state.msgList.baseMsg" :item="baseMsgObj" class="list-row line-bottom" :key="baseMsgObj.mid"></msg-item>
+        <msg-item1 v-for="baseMsgObj in $store.state.msgList.baseMsg" :item="baseMsgObj" class="list-row line-bottom" :key="baseMsgObj.mid"></msg-item1>
+    </ul>
+    <hr style="margin-top: 120px">
+
+    <ul class="wechat-list">
+        <!--props传递消息对象 baseMsgObj -->
+        <msg-item v-for="baseMsgObj in $store.state.users" :item="baseMsgObj" class="list-row line-bottom" ></msg-item>
     </ul>
     <!-- tests -->
     <hr style="margin-top: 120px">
+
     <ul>
         <li v-for="user in users" track-by="id" v-bind:id="user.id" v-on:click="changeSession(user.id, user.nickname)" v-if="user.id != $store.state.currentUser.id">
             <img v-bind:src="user.avatar" v-bind:alt="user.name" width="30">
             <p>{{ user.nickname }} <span v-if="user.id == 0">({{ currentCount }})</span></p>
-            <div v-bind:class="[ user.has_message ? 'dot' : '' ]"></div>
+            <div v-if="user.has_message">
+                有
+            </div>
+            <div v-else>
+                无
+            </div>
         </li>
     </ul>
   </div>
@@ -20,11 +32,14 @@
     import search from "../common/search"
     import msgItem from "../wechat/msg-item"
     import msgItem1 from "../wechat/msg-item1"
+
+
+    // Vue.use(baiduLocation)
     export default {
         components: {
             search,
             msgItem,
-            msgItem1
+            msgItem1,
         },
         mixins: [window.mixin],
         data() {
@@ -35,44 +50,56 @@
 
             }
         },
-        created : function(){
-            console.log('created-wechat');
+        created : function () {
+            const storage = window.localStorage
+            console.log(storage.getItem('position'));
             let user_code = this.$store.state.userInfo.user_code
             let nickname = this.$store.state.userInfo.nickname
             let img = this.$store.state.userInfo.img
-            let conn = new WebSocket("ws://127.0.0.1:9502?user_code=" + user_code + "&nickname=" + nickname + "&img="+ img)
             let _this = this
-            conn.onopen = function(evt){
-                _this.$store.dispatch('changeStatus', true)
-            }
-            conn.onclose = function(evt){
-                _this.$store.dispatch('changeStatus', false)
-            }
-            conn.onmessage = function(evt){
-                let msg = JSON.parse(evt.data)
-                switch(msg.type){
-                    case 'connect':
-                        _this.$store.dispatch('addUser', msg.data);
-                        _this.$store.dispatch('setCount', msg.data.count);
-                        break;
-                    case 'disconnect':
-                        _this.$store.dispatch('removeUser', msg.data.id);
-                        _this.$store.dispatch('setCount', msg.data.count);
-                        break;
-                    case 'self_init':
-                        _this.$store.dispatch('setUser', msg.data);
-                        _this.$store.dispatch('setCount', msg.data.count);
-                        break;
-                    case 'other_init':
-                        _this.$store.dispatch('addUser', msg.data);
-                        break;
-                    case 'message':
-                        _this.$store.dispatch('addMessage', msg.data);
-                        break;
-                }
-            }
-            // 保存conn
-            this.$store.dispatch('SETCONN', conn)
+            // this.$http.post('/test/api/friends/getownfriends', {own_code: this.$store.state.userInfo.user_code})
+            //   .then((res) => {
+            //       _this.$store.dispatch('ownFriends', res.data.user_manages)
+                  // let friends = res.data.user_manages
+
+                  let conn = new WebSocket("ws://127.0.0.1:9502?user_code=" + user_code + "&nickname=" + nickname + "&img="+ img)
+                  conn.onopen = function(evt){
+                      _this.$store.dispatch('changeStatus', true)
+                  }
+                  conn.onclose = function(evt){
+                      _this.$store.dispatch('changeStatus', false)
+                  }
+                  conn.onmessage = function(evt){
+                      let msg = JSON.parse(evt.data)
+                      switch(msg.type){
+                          case 'connect':
+                              _this.$store.dispatch('addUser', msg.data);
+                              _this.$store.dispatch('setCount', msg.data.count);
+                              break;
+                          case 'disconnect':
+                              _this.$store.dispatch('removeUser', msg.data.id);
+                              _this.$store.dispatch('setCount', msg.data.count);
+                              break;
+                          case 'self_init':
+                              console.log('count');
+                              _this.$store.dispatch('setUser', msg.data);
+                              _this.$store.dispatch('setCount', msg.data.count);
+                              break;
+                          case 'other_init':
+                              _this.$store.dispatch('addUser', msg.data);
+
+                              break;
+                          case 'message':
+                              _this.$store.dispatch('addMessage', msg.data);
+                              break;
+                      }
+                  }
+                  // 保存conn
+                  this.$store.dispatch('SETCONN', conn)
+                  console.log(this.$store.getters.users)
+              // })
+
+
         },
 
         methods : {
@@ -80,6 +107,7 @@
                 this.$router.push({path: '/wechat/dialogue1', query: { name: nickname}})
                 if (typeof userId == 'number') {
                     this.$store.dispatch('selectSession', userId)
+                    this.$store.dispatch('setHasMessageStatus', userId)
                     // this.setHasMessageStatus(userId,false);
                 }
             }

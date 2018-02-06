@@ -55,6 +55,7 @@ const mutations = {
                 state.friendslist = res.data
             })
     },
+
     // 设置连接
     [types.SET_CONN] (state, conn) {
       if (conn != null && state.connection == null) {
@@ -64,12 +65,13 @@ const mutations = {
     [types.DOLOGIN] (state, token) {
         state.token = token
         state.userInfo = JSON.parse(localStorage.userInfo)
+
     },
 
     [types.DOLOGOUT] (state) {
-
         localStorage.removeItem('userInfo')
         localStorage.removeItem('token')
+        localStorage.removeItem('position')
         state.userInfo = {}
         state.friendslist = {}
         state.token = null
@@ -96,36 +98,47 @@ const mutations = {
     },
     // 设置用户
     [types.SET_USER] (state, user) {
-        // state.userInfo.socket = user
         state.currentUser = user
-        // state.currentUser.name = state.userInfo.nickname
-        // state.currentUser.nickname = state.userInfo.nickname
-        // state.currentUser.avatar = state.userInfo.img
-        // state.currentUser.user_code = state.userInfo.user_code
-
-
     },
-    // 添加用户(用户列表)
+    // 添加用户（在线用户列表)
     [types.ADD_USER] (state, user) {
-        console.log('asd');
-        console.log(user);
+        // let friends = state.ownfrienfs
+        // console.log('friends');
+        // console.log(friends);
         if (user instanceof Array) {
             for (var i = user.length - 1; i >= 0; i--) {
                 if (user[i].id != state.currentUser.id) {
                     user[i].has_message = false;
                     state.users.push(user[i]);
                 }
+                // if (friends instanceof Array) {
+                //     friends.forEach((item, index) => {
+                //         if (item.friend_code == user[i].user_code) {
+                //             user[i].has_message = false;
+                //             state.users.push(user[i]);
+                //         }
+                //     })
+                // } else {
+                //     if (friends.friend_code == user[i].user_code) {
+                //         user[i].has_message = false;
+                //         state.users.push(user[i]);
+                //     }
+                // }
+
             }
         }else{
-            user.has_message = false;
-            state.users.push(user);
+            // if (user.user_code == friends.friend_code) {
+                user.has_message = false;
+                state.users.push(user);
+            // }
         }
-        console.log('users');
-        console.log(state.users);
+    },
+    // 过滤用户，保留自己添加通过的用户
+    [types.OWN_FRIENDS] (state, friends) {
+        state.ownfrienfs = friends
     },
     // 移除用户
     [types.REMOVE_USER] (state, userId) {
-        console.log('remove');
         state.users.forEach((item,index) => {
             if (item.id == userId) {
                 state.users.splice(index) //2.0没有$remove 换成 splice
@@ -141,7 +154,9 @@ const mutations = {
                 nickname : ''
             },
             msg : message.msg,
-            time : message.date
+            time : message.date,
+            position: message.position,
+            type : message.type
         };
         // 赋值给msg中的user
         if (message.from == state.currentUser.id) {
@@ -172,21 +187,25 @@ const mutations = {
             // 保持数据视图一致性，确保数据实时性，动态数据相应
             Vue.set(state.broadcast, message.from, state.broadcast[ message.from ]);
         }
-        console.log(state.broadcast);
     },
     // 设置信息发送相关
-    [types.SET_HAS_MESSAGE] (state, userId, status) {
+    [types.SET_HAS_MESSAGE] (state, {userId, status}) {
+        console.log(status);
+        console.log(userId);
+        if (status == '') {
+            statue = false
+        }
         for (var i = state.users.length - 1; i >= 0; i--) {
-            if (status == false && state.users[i].id == userId || state.users[i].id == userId && state.currentSession.id != userId ) {
+            if (state.users[i].id == userId ) {
                 state.users[i].has_message = status;
             }
         }
+        console.log('chaeck');
+        console.log(state.users);
     },
     // 统计发送个数
     [types.SET_COUNT] (state, count) {
         state.currentCount = count;
-        console.log('set-count');
-        console.log(state.currentCount);
     },
     // 提示
     [types.SHOW_NOTICE] (state, msg, type) {

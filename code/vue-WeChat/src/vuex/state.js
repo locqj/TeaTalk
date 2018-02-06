@@ -20,6 +20,7 @@ const state = {
     userInfo: {}, //系统个人信息
     token: null,
     friendslist: {},
+    ownfrienfs: {},
     msgList: {
         stickMsg: [], //置顶消息列表 后期需要
         baseMsg: [{ //普通消息列表
@@ -161,12 +162,6 @@ const state = {
     },
     //all users
     users : [
-        {
-            id : 0,
-            nickname : '群聊',
-            avatar : 'http://58pic.ooopic.com/58pic/12/25/04/02k58PICVwf.jpg',
-            has_message : false
-        }
     ],
     filterUser: '',
 

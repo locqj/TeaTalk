@@ -15,7 +15,22 @@ use App\Model\UserManages;
 use App\Model\Moments;
 date_default_timezone_set('Asia/Shanghai');
 class FriendsController extends Controller
-{	
+{
+
+
+    /**
+     * [getFriends 获取朋友信息 不分组]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function getFriends(Request $request) {
+        $user_manages = new UserManages();
+        $data = $user_manages->getFriends($request->get('own_code'));
+        return $data;
+    }
+
+
+    
     /**
      * [getFriendsList 好友通讯录]
      * @param  Request $request [description]
@@ -29,6 +44,7 @@ class FriendsController extends Controller
     }
 
 
+
     /**
      * [doClassifyFriends 朋友列表数据分类]
      * @param  [type] $data [description]
@@ -40,7 +56,7 @@ class FriendsController extends Controller
         if (isset($data)) {
             foreach ($data as $key => $value) {
                 $value->school_name = $school->getSchoolName($value->wUserDetails->school_code);
-                $value->department_name = 
+                $value->department_name =
                     $department->getDepartmentName($value->wUserDetails->department_code);
                 $value->first_word = $this->getFirstCharter($value->wUserDetails->nickname); //获取nickname的第一个字符
                 if ($value->aUsers->status_del == 0) {
@@ -67,7 +83,7 @@ class FriendsController extends Controller
         if (isset($data)) {
             foreach ($data as $key => $value) {
                 $value->school_name = $school->getSchoolName($value->userDetails->school_code);
-                $value->department_name = 
+                $value->department_name =
                     $department->getDepartmentName($value->userDetails->department_code);
                 $dis = $user_manages->disFirst($request->get('own_code'), $value->code);
                 if ($dis) {
@@ -95,7 +111,7 @@ class FriendsController extends Controller
         $data->imgs = $this->getUserPhoto($request->get('user_code'));
         $data->department_name = $department->getDepartmentName($data->userDetails->department_code);
         $data->head_img = json_decode($data->userDetails->img)[0];
-        return $data;   
+        return $data;
     }
 
     /**
@@ -111,7 +127,7 @@ class FriendsController extends Controller
         if (isset($data)) {
             foreach ($data as $key => $value) {
                 $value->school_name = $school->getSchoolName($value->wUserDetails->school_code);
-                $value->department_name = 
+                $value->department_name =
                     $department->getDepartmentName($value->wUserDetails->department_code);
                 $dis = $user_manages->disFirst($request->get('own_code'), $value->code);
                 $value->head_img = $value->wUserDetails->img;
@@ -135,16 +151,21 @@ class FriendsController extends Controller
         if (isset($data)) {
             foreach ($data as $key => $value) {
                 $value->school_name = $school->getSchoolName($value->aUserDetails->school_code);
-                $value->department_name = 
+                $value->department_name =
                     $department->getDepartmentName($value->aUserDetails->department_code);
                 $dis = $user_manages->disFirst($request->get('own_code'), $value->code);
                 $value->head_img = $value->aUserDetails->img;
 
             }
         }
-        return $data;   
+        return $data;
     }
 
+    /**
+     * [getLists 朋友添加详情]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function getLists(Request $request) {
         $school = new School();
         $department = new Department();
@@ -152,39 +173,39 @@ class FriendsController extends Controller
         $getFriends = $user_manages->getFriends($request->get('user_code'));
         $getRefuse = $user_manages->getRefuse($request->get('user_code'));
         $getWaitFriends = $user_manages->getAcceptUsers($request->get('user_code'));
-
+        // 等待接受
         if (isset($getWaitFriends)) {
             foreach ($getWaitFriends as $key => $value) {
                 $value->school_name = $school->getSchoolName($value->wUserDetails->school_code);
-                $value->department_name = 
+                $value->department_name =
                     $department->getDepartmentName($value->wUserDetails->department_code);
                 $dis = $user_manages->disFirst($request->get('user_code'), $value->code);
-                $value->head_img = $value->wUserDetails->img;
+                $value->head_img = json_decode($value->wUserDetails->img);
 
             }
         }
-
+        // 已经通过
         if (isset($getFriends)) {
             foreach ($getFriends as $key => $value) {
                 $value->school_name = $school->getSchoolName($value->aUserDetails->school_code);
-                $value->department_name = 
+                $value->department_name =
                     $department->getDepartmentName($value->aUserDetails->department_code);
                 $dis = $user_manages->disFirst($request->get('user_code'), $value->code);
-                $value->head_img = $value->aUserDetails->img;
+                $value->head_img = json_decode($value->aUserDetails->img);
             }
         }
-
+        // 拒绝
         if (isset($getRefuse)) {
             foreach ($getRefuse as $key => $value) {
                 $value->school_name = $school->getSchoolName($value->aUserDetails->school_code);
-                $value->department_name = 
+                $value->department_name =
                     $department->getDepartmentName($value->aUserDetails->department_code);
                 $dis = $user_manages->disFirst($request->get('user_code'), $value->code);
-                $value->head_img = $value->aUserDetails->img;
+                $value->head_img = json_decode($value->aUserDetails->img);
             }
         }
-        
-        return compact('getRefuse', 'getFriends', 'getWaitFriends');   
+
+        return compact('getRefuse', 'getFriends', 'getWaitFriends');
 
     }
 
@@ -218,7 +239,7 @@ class FriendsController extends Controller
         $req = $user_manages->doUpdate($request->get('friend_code'), $request->get('user_code'), 1);
         if ($req) {
             $dis = $user_manages->disData($request->get('user_code'), $request->get('friend_code'));
-            if (!$dis) {            
+            if (!$dis) {
                 $req = $user_manages->insert(['user_code' => $request->get('user_code'), 'friend_code' => $request->get('friend_code'), 'status' => 1]);
             } else {
                 $req = $user_manages->doUpdate($request->get('user_code'), $request->get('friend_code'), 1);
@@ -237,7 +258,7 @@ class FriendsController extends Controller
         $req = $user_manages->doUpdate($request->get('friend_code'), $request->get('user_code'), 2);
         if ($req) {
             $dis = $user_manages->disData($request->get('user_code'), $request->get('friend_code'));
-            if (!$dis) {            
+            if (!$dis) {
                 $req = $user_manages->insert(['user_code' => $request->get('user_code'), 'friend_code' => $request->get('friend_code'), 'status' => 2]);
             } else {
                 $req = $user_manages->doUpdate($request->get('user_code'), $request->get('friend_code'), 2);
@@ -312,5 +333,5 @@ class FriendsController extends Controller
         return $moment->getUserPhoto($user_code);
     }
 
-    
+
 }

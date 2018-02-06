@@ -8,7 +8,7 @@ class UserManages extends Model
 {
     protected $table = 'user_manages';
     public $timestamps = false;
-    
+
     public function disData($user_code, $friend_code) {
     	return $this->where('user_code', $user_code)
     		->where('friend_code', $friend_code)->exists();
@@ -33,6 +33,8 @@ class UserManages extends Model
     	return $this->where('user_code', $user_code)
     		->where('status', 0)->with('wUsers', 'wUserDetails')->get();
     }
+
+    
     /**
      * [getFriends 已经接受的，成为朋友名单]
      * @param  [type] $user_code [description]
@@ -40,7 +42,7 @@ class UserManages extends Model
      */
     public function getFriends($user_code) {
     	return $this->where('user_code', $user_code)
-    		->where('status', 1)->with('wUsers', 'wUserDetails')->get();	
+    		->where('status', 1)->with('wUsers', 'wUserDetails')->get();
     }
     /**
      * [getRefuse 拒绝添加朋友]

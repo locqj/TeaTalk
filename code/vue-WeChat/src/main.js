@@ -9,6 +9,8 @@ import FastClick from 'fastclick' //使用 fastclick 解决移动端 300ms 点�
 import filters from './filters' //将全部过滤器放在 filters/index.js 中便于管理
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
+
+
 //技巧 同时 use 多个插件 被依赖的插件应放在偏后方
 Vue.use(MintUI)
 Vue.use(VueAxios, axios, vuex)
@@ -18,6 +20,7 @@ filters(Vue)
 Vue.config.productionTip = false //将此值设置为 false ,会关闭 Vue 启动时的提示信息，推荐
 
 FastClick.attach(document.body)
+
 
 // 每次请求页面先赋值，　因为store是不持久的
 if (window.localStorage.getItem('token')) {
@@ -35,6 +38,10 @@ router.beforeEach((to, from, next) => {
                 // 后台请求通讯录
                 store.dispatch("getFriendsList", user.user_code)
             }
+
+
+
+
         } else {
             next({
                 path: '/login'

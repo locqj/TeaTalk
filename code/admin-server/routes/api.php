@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Api\Controllers'], function ($api) {
-        
+
         $api->post('user/login','AuthController@authenticate');
         $api->post('user/register','RegisterController@register');
 	    $api->post('uploadheadimg','UploadsController@uploadHeadImg');
@@ -27,6 +27,7 @@ $api->version('v1', function ($api) {
         $api->get('dozan', 'MomentsController@doZans');
         $api->post('docomment', 'MomentsController@doComment');
 
+        $api->post('friends/getownfriends', 'FriendsController@getFriends');
         $api->get('friends/getfriends', 'FriendsController@getFriendsList');
         $api->get('friends/getwaitacceptusers', 'FriendsController@getWaitAcceptUsers');
         $api->get('friends/getacceptusers', 'FriendsController@getAcceptUsers');
@@ -36,6 +37,9 @@ $api->version('v1', function ($api) {
         $api->post('friends/doadd', 'FriendsController@doAddFriend');
         $api->post('friends/doaccept', 'FriendsController@doAcceptFriend');
         $api->post('friends/dorefuse', 'FriendsController@doRefuseFriend');
+
+
+
         $api->get('test', 'MomentsController@test');
     });
 

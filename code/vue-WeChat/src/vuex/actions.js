@@ -32,14 +32,20 @@ export default{
   addMessage : ({ commit }, message) => {
       if (message.is_self != 1) {
           let userId = message.to == 0 ? 0 : message.from;
-
-          commit(types.SET_HAS_MESSAGE,userId,true);
+          commit(types.SET_HAS_MESSAGE,
+              {
+                userId: userId,
+                status: true
+              });
       }
       commit(types.ADD_MESSAGE,message);
   },
 
   setHasMessageStatus : ({ commit }, userId, status) => {
-      commit(types.SET_HAS_MESSAGE, userId, status);
+      commit(types.SET_HAS_MESSAGE, {
+        userId: userId,
+        status: status
+      });
   },
   setCount : ({ commit }, count) => {
       commit(types.SET_COUNT, count);
@@ -58,4 +64,7 @@ export default{
       commit(types.CHANGE_SESSION, userId);
   },
 
+  ownFriends : ({ commit }, friends) => {
+      commit(types.OWN_FRIENDS, friends)
+  }
 }
