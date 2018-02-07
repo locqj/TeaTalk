@@ -19,11 +19,11 @@
                 <mt-field label="生日" placeholder="请输入生日" type="date" v-model="userInfo.birthday"></mt-field>
                 <mt-field label="自我介绍" placeholder="自我介绍" type="textarea" rows="4" v-model="userInfo.signlog"></mt-field>
             </div>
-            
+
             <div class="page-radio">
                 <mt-radio title="性别" v-model="userInfo.sex" :options="this.sexoption"></mt-radio>
             </div>
-            
+
 
             <p>
                 <mt-cell class="upload-title" title="选择学校,系别">
@@ -31,21 +31,22 @@
                 </mt-cell>
                 <SelectSchool v-on="{school: getschool, province_school: getprovince, major: getmajor}"></SelectSchool>
             </p>
-            
+            <interest-tag></interest-tag>
+
         </div>
         <div class="weui-btn-area">
             <a class="weui-btn weui-btn_primary" href="javascript:" id="showTooltips" @click="register">注册</a>
         </div>
-        
+
     </div>
 
-    
+
     <div class="weui-footer weui-footer_fixed-bottom locqj-footer">
             <p class="weui-footer__links">
                 <a href="javascript:home();" class="weui-footer__link">Tea-talk</a>
             </p>
             <p class="weui-footer__text">Copyright © 2014-2018 locqj.top</p>
-    </div>   
+    </div>
 </div>
 
 </template>
@@ -53,10 +54,10 @@
 import { Toast, Radio } from 'mint-ui'
 import Uploads from './../Uploads/Uploads.vue'
 import SelectSchool from './SelectSchool.vue'
-
+import InterestTag from './interestTag.vue'
 export default {
     data(){
-        return{    
+        return{
             userInfo: {
                 name: '',
                 nickname: '',
@@ -75,13 +76,13 @@ export default {
         }
     },
     methods: {
-         
+
         setimgsfilname (data) {
             this.userInfo.img = data
         },
         register () {
             const storage = window.localStorage
-            const phoneReg = /^1[34578]\d{9}$/        
+            const phoneReg = /^1[34578]\d{9}$/
             //const userInfo = storage.getItem('userInfo')
             if (!this.userInfo.name) {
                 Toast({
@@ -135,7 +136,7 @@ export default {
                         })
                     }
                 })
-            } 
+            }
         },
         sex ($sex) {
             if ($sex == 1) {
@@ -174,7 +175,8 @@ export default {
     },
     components: {
       SelectSchool,
-      Uploads
+      Uploads,
+      InterestTag
     }
 
 }
@@ -182,14 +184,14 @@ export default {
 <style>
     .locqj-footer {
         position: static;
-        margin-top: 10%    
+        margin-top: 10%
     }
     .upload-title{
-        
+
         margin-left: 2%;
         color: #888;
         display: block;
         font-size: 12px;
-        
+
     }
 </style>

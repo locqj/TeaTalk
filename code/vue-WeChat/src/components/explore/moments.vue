@@ -29,7 +29,7 @@
         <!-- moments -->
         <div class="weui-cell moments__post" v-for="(item, key) in moment">
             <div class="weui-cell__hd">
-                <img :src="userInfo.img">
+                <img :src="item.img">
             </div>
             <div class="weui-cell__bd" >
                 <!-- 人名链接 -->

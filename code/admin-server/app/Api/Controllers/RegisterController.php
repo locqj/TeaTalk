@@ -7,17 +7,18 @@ use App\Api\Traits\Responder;
 use DB;
 use App\User;
 use App\Model\UserDetails;
+use App\Model\InterestTag;
 use App\Api\Controllers\Controller;
 date_default_timezone_set('Asia/Shanghai');
 class RegisterController extends Controller
-{	
+{
     /**
      * [register 注册]
      * @param  Request $request [description]
      * @return [type]           [description]
      */
     public function register(Request $request)
-    {   
+    {
         $user_code = 'C'.User::count();
         $school_code = $this->getSchoolCode($request->get('school'));
         $department_code = $this->getDepartmentCode($request->get('department'));
@@ -36,7 +37,7 @@ class RegisterController extends Controller
             $user_details = DB::table('user_details')->insert([
                 "nickname" => $request->get('nickname'),
                 'birth' => $request->get('birthday'),
-                'img' => $request->get('img')[0],
+                'img' => $request->get('img'),
                 'sex' => $request->get('sex'),
                 'phone' => $request->get('phone'),
                 'last_ip' => $this->ip(),
@@ -53,6 +54,16 @@ class RegisterController extends Controller
     		];
         	return response()->json($this->responseData($data));
         }
+    }
+
+    /**
+     * [getInterestTag 获取兴趣标签]
+     * @return [type] [description]
+     */
+    public function getInterestTag()
+    {
+        $interest_tag = new InterestTag;
+        return response()->json($interest_tag->getData());
     }
 
 }

@@ -19,8 +19,11 @@ $api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Api\Controllers'], function ($api) {
 
         $api->post('user/login','AuthController@authenticate');
+
         $api->post('user/register','RegisterController@register');
 	    $api->post('uploadheadimg','UploadsController@uploadHeadImg');
+        $api->get('user/register/interesttag', 'RegisterController@getInterestTag');
+
         $api->post('addmoment', 'MomentsController@addMoments');
         $api->get('getmoment/{user_code}', 'MomentsController@getMoments');
         $api->get('getzan', 'MomentsController@getZans');

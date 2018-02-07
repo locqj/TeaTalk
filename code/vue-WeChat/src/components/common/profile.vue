@@ -86,7 +86,7 @@
                     未填写
                 </div>
                 <div class="weui-cell__ft" style="width:79%" v-else>
-                    {{ userInfo.signlog }}大叔大婶大所大所大所多按时按时打算阿萨德阿萨德大叔大婶大所大所大所多按时按时打算阿萨德阿萨德大叔大婶大所大所大所多按时按时打算阿萨德阿萨德
+                    {{ userInfo.signlog }}
                 </div>
             </div>
         </div>
