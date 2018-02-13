@@ -12,7 +12,26 @@ const routes = [{
         name: "注册",
         component: resolve => require(["../components/register/register.vue"], resolve)
     },{
-        path: '/',
+            path: '/',
+            name: "兴趣圈",
+            components: {
+                "default": resolve => require(["../components/intmoment/index.vue"], resolve),
+            },
+            meta: {
+                    requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+                }
+    },{
+            path: '/intmoment/add',
+            name: "添加",
+            components: {
+                "default": resolve => require(["../components/intmoment/index.vue"], resolve),
+                "subPage": resolve => require(["../components/intmoment/add.vue"], resolve)
+            },
+            meta: {
+                    requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+                }
+    },{
+        path: '/wechat',
         name: "微信",
         components: {
             "default": resolve => require(["../components/wechat/wechat.vue"], resolve),

@@ -74,6 +74,7 @@ const mutations = {
         localStorage.removeItem('position')
         state.userInfo = {}
         state.friendslist = {}
+        state.intdata = {}
         state.token = null
         state.connection = null
 
@@ -215,7 +216,8 @@ const mutations = {
         setTimeout(function(){
             state.notice.show = false;
         },1000);
-    }
+    },
+
 
 
 

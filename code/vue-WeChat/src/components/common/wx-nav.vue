@@ -1,7 +1,13 @@
 <template>
   <div id="wx-nav">
 	<nav>
-        <router-link to="/" tag="dl" exact>
+        <router-link to="/" tag="dl">
+            <dt class="iconfont icon-find" >
+                <i class="new-msg-dot"></i>
+            </dt>
+            <dd>兴趣圈</dd>
+        </router-link>
+        <router-link to="/wechat" tag="dl" exact>
             <dt class="iconfont icon-wechat" >
                 <i class="new-msg-count" v-show="$store.state.newMsgCount">{{$store.state.newMsgCount}}</i>
             </dt>

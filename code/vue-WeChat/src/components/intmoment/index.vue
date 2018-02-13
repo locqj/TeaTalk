@@ -1,79 +1,82 @@
 <template>
     <!--朋友圈组件 后期开发的核心-->
     <div id="moments">
+        <mt-navbar v-model="selected" class="nav-head">
+          <mt-tab-item id="1">{{tag1}}</mt-tab-item>
+          <mt-tab-item id="2">{{tag2}}</mt-tab-item>
+          <mt-tab-item id="3">{{tag3}}</mt-tab-item>
+          <mt-tab-item id="4">{{tag4}}</mt-tab-item>
+          <mt-tab-item id="5">{{tag5}}</mt-tab-item>
+        </mt-navbar>
 
-        <header id="wx-header">
-            <div class="center">
-                <router-link to="/explore" tag="div" class="iconfont icon-return-arrow">
-                    <span>发现</span>
-                </router-link>
-                <span>朋友圈</span>
-                <router-link to="/explore/moments/new" style="color:#fff">
-                    <span class="iconfont icon-tips-jia other"></span>
-                </router-link>
+        <!-- tab-container -->
+        <mt-tab-container v-model="selected" >
+          <mt-tab-container-item id="1">
+              <!-- moments -->
+              <div class="weui-cell moments__post" v-for="(item, key) in tags1">
+                  <div class="weui-cell__hd">
+                      <img :src="item.head_img">
+                  </div>
+                  <div class="weui-cell__bd" >
+                      <!-- 人名链接 -->
+                      <a class="title">
+                          <span>{{ item.user_details.nickname }}</span>
+                      </a>
+                      <!-- post内容 -->
+                      <p id="paragraph" class="paragraph">{{ item.content }}</p>
+                      <!-- 伸张链接 -->
+                      <!-- <a id="paragraphExtender" class="paragraphExtender">显示全文</a> -->
+                      <!-- 相册 -->
+                      <div class="thumbnails my-gallery" v-if="item.imgs">
+                          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="thumbnail" v-for="(it, k) in item.imgs">
 
-            </div>
-        </header>
+                              <a :href="it" itemprop="contentUrl" data-size="400x400">
+                                  <img :src="it" itemprop="thumbnail" alt="Image description" />
+                              </a>
+                              <figcaption itemprop="caption description">Image {{ k }}</figcaption>
+                          </figure>
+                      </div>
+                      <!-- 资料条 -->
+                      <div class="toolbar">
+                          <p class="timestamp">{{ item.time }}</p>
+                          <mt-button id="actionToggle" class="actionToggle" @click.native="sheetVisible = true" @click="changecode(item.code, item.user_code, key, item.user_details.nickname)" v-if="item.dis_zan">...</mt-button>
+                          <mt-button id="actionToggle" class="actionToggle" @click.native="sheetVisible1 = true" @click="changecode(item.code, item.user_code, key, item.user_details.nickname)" v-else>...</mt-button>
+                      </div>
+                      <!-- 赞／评论区 -->
+                      <p class="liketext"><i class="iconfont">&#xe874;</i><span class="nickname" v-for="it in item.zan">{{ it.name }},</span></p>
+                      <!-- 评论 -->
 
-        <div class="home-pic">
-            <div class="home-pic-base">
-                <div class="top-pic">
-                    <div class="top-pic-inner">
-                        <img :src="userInfo.img">
-                    </div>
-                </div>
-                <div class="top-name _ellipsis">{{userInfo.nickname}}</div>
-            </div>
-        </div>
+                      <span v-for="it in item.comment">
 
-        <!-- moments -->
-        <div class="weui-cell moments__post" v-for="(item, key) in moment">
-            <div class="weui-cell__hd">
-                <img :src="item.img">
-            </div>
-            <div class="weui-cell__bd" >
-                <!-- 人名链接 -->
-                <a class="title">
-                    <span>{{ item.user_details.nickname }}</span>
-                </a>
-                <!-- post内容 -->
-                <p id="paragraph" class="paragraph">{{ item.content }}</p>
-                <!-- 伸张链接 -->
-                <!-- <a id="paragraphExtender" class="paragraphExtender">显示全文</a> -->
-                <!-- 相册 -->
-                <div class="thumbnails my-gallery" v-if="item.img">
-                    <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="thumbnail" v-for="(it, k) in item.img">
-
-                        <a :href="it" itemprop="contentUrl" data-size="400x400">
-                            <img :src="it" itemprop="thumbnail" alt="Image description" />
-                        </a>
-                        <figcaption itemprop="caption description">Image {{ k }}</figcaption>
-                    </figure>
-                </div>
-                <!-- 资料条 -->
-                <div class="toolbar">
-                    <p class="timestamp">{{ item.time }}</p>
-                    <mt-button id="actionToggle" class="actionToggle" @click.native="sheetVisible = true" @click="changecode(item.code, item.user_code, key, item.user_details.nickname)" v-if="item.dis_zan">...</mt-button>
-                    <mt-button id="actionToggle" class="actionToggle" @click.native="sheetVisible1 = true" @click="changecode(item.code, item.user_code, key, item.user_details.nickname)" v-else>...</mt-button>
-                </div>
-                <!-- 赞／评论区 -->
-                <p class="liketext"><i class="iconfont">&#xe874;</i><span class="nickname" v-for="it in item.zan">{{ it.name }},</span></p>
-                <!-- 评论 -->
-
-                <span v-for="it in item.comment">
-
-                <p  class="contenttext" @click="replayComment(it, item)" > <span v-if="!it.status_first">回复</span><span class="nickname">{{ it.user_name }}</span>To<span class="nickname">{{ it.to_user_name }}:</span><span class="content">{{ it.content }}</span></p>
+                      <p  class="contenttext" @click="replayComment(it, item)"> <span v-if="!it.status_first">回复</span><span class="nickname">{{ it.user_name }}</span>To<span class="nickname">{{ it.to_user_name }}:</span><span class="content">{{ it.content }}</span></p>
 
 
 
-                </span>
-                <!-- end 评论 -->
-                <mt-actionsheet :actions="actions" v-model="sheetVisible" v-if="item.dis_zan"></mt-actionsheet>
-                <mt-actionsheet :actions="actions2" v-model="sheetVisible1" v-else></mt-actionsheet>
-            </div>
-            <!-- 结束 post -->
-        </div>
-        <!-- end moments -->
+                      </span>
+                      <!-- end 评论 -->
+                      <mt-actionsheet :actions="actions" v-model="sheetVisible" v-if="item.dis_zan"></mt-actionsheet>
+                      <mt-actionsheet :actions="actions2" v-model="sheetVisible1" v-else></mt-actionsheet>
+                  </div>
+                  <!-- 结束 post -->
+              </div>
+              <!-- end moments -->
+          </mt-tab-container-item>
+          <mt-tab-container-item id="2">
+            <mt-cell v-for="item in tags2" :title="'测试 ' + item"/>
+          </mt-tab-container-item>
+          <mt-tab-container-item id="3">
+            <mt-cell v-for="item in tags3" :title="'选项 ' + item"/>
+          </mt-tab-container-item>
+          <mt-tab-container-item id="4">
+            <mt-cell v-for="item in tags4" :title="'选项 ' + item"/>
+          </mt-tab-container-item>
+          <mt-tab-container-item id="5">
+            <mt-cell v-for="item in tags5" :title="'选项 ' + item"/>
+          </mt-tab-container-item>
+        </mt-tab-container>
+
+
+
 
 
         <!-- PhotoSwipe插件需要的元素， 一定要有类名 pswp -->
@@ -117,7 +120,7 @@
     </div>
 </template>
 <script>
-    import { Actionsheet, Toast, MessageBox } from 'mint-ui';
+    import { Actionsheet, Toast, MessageBox, TabItem, Navbar } from 'mint-ui';
     import PhotoSwipe from 'photoswipe'
     import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default'
     import 'photoswipe/dist/photoswipe.css'
@@ -125,6 +128,7 @@
     export default {
         data() {
             return {
+                selected: "1",
                 sheetVisible: false,
                 sheetVisible1: false,
                 user_zan: false,
@@ -134,10 +138,15 @@
                 moment: {},
                 actions: [],
                 actions2: [],
-                firstcomment: {}
+                firstcomment: {},
+
             }
         },
         methods: {
+            // 请求tag数据
+            tag(int_code) {
+                console.log(int_code);
+            },
             initPhotoSwipeFromDOM (gallerySelector) {
                 var parseThumbnailElements = function (el) {
                     var thumbElements = el.childNodes,
@@ -280,7 +289,7 @@
                 }
             },
             zan () {
-                this.$http.get('/test/api/dozan?moment_code='+this.moment_code+'&user_code='+this.userInfo.user_code)
+                this.$http.get('/test/api/dointzan?moment_code='+this.moment_code+'&user_code='+this.userInfo.user_code)
                 .then((res) => {
                     Toast({
                         message: '赞',
@@ -298,7 +307,7 @@
 
             },
             zan1 () {
-                this.$http.get('/test/api/dozan?moment_code='+this.moment_code+'&user_code='+this.userInfo.user_code)
+                this.$http.get('/test/api/dointzan?moment_code='+this.moment_code+'&user_code='+this.userInfo.user_code)
                 .then((res) => {
                     Toast({
                         message: '取消点赞',
@@ -399,18 +408,48 @@
                 name: '评论',
                 method: this.comment
             }];
-
         },
         created () {
-            this.$http.get('/test/api/getmoment/'+this.userInfo.user_code)
-                .then((res) => {
-                    this.moment = res.data.moments
-                })
-        }
+            let _this = this
+            let intdata = this.$store.state.userInfo.intdata
+            console.log(intdata);
+            let i = 1
+            for (let index in intdata)
+            {
+                switch (i) {
+                    case 1:
+                        _this.tag1 = index
+                        _this.tags1 = intdata[index]
+                        break;
+                    case 2:
+                        _this.tag2 = index
+                        _this.tags2 = intdata[index]
+                        break;
+                    case 3:
+                        _this.tag3 = index
+                        _this.tags3 = intdata[index]
+                        break;
+                    case 4:
+                        _this.tag4 = index
+                        _this.tags4 = intdata[index]
+                        break;
+                    case 5:
+                        _this.tag5 = index
+                        _this.tags5 = intdata[index]
+                        break;
+
+                }
+                i++
+            }
+        },
+
     }
 
 </script>
 <style>
     @import "../../assets/css/moments.css";
+    .nav-head {
+        margin-top: 4%;
+    }
     /* @import url('//at.alicdn.com/t/font_8d5l8fzk5b87iudi.css'); */
 </style>

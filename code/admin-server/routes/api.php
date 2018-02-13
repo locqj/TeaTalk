@@ -30,6 +30,12 @@ $api->version('v1', function ($api) {
         $api->get('dozan', 'MomentsController@doZans');
         $api->post('docomment', 'MomentsController@doComment');
 
+        $api->post('addintmoment', 'IntMomentsController@addMoments');
+        $api->get('getintmoment/{user_code}/{int_code}', 'IntMomentsController@getMoments');
+        $api->get('getintzan', 'IntMomentsController@getZans');
+        $api->get('dointzan', 'IntMomentsController@doZans');
+        $api->post('dointcomment', 'IntMomentsController@doComment');
+
         $api->post('friends/getownfriends', 'FriendsController@getFriends');
         $api->get('friends/getfriends', 'FriendsController@getFriendsList');
         $api->get('friends/getwaitacceptusers', 'FriendsController@getWaitAcceptUsers');

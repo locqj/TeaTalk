@@ -56,7 +56,8 @@ const getters = {
 
     notice : ({ notice }) => notice,
 
-    friendslist : ({ friendslist }) => friendslist
+    friendslist : ({ friendslist }) => friendslist,
+
 }
 
 export default getters

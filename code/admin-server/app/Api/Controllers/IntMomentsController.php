@@ -6,38 +6,31 @@ use App\Api\Traits\Responder;
 use App\Api\Controllers\Controller;
 use DB;
 use App\User;
-use App\Model\Moments;
-use App\Model\Zan;
+use App\Model\IntMoments;
 use App\Model\UserDetails;
-use App\Model\MomentsComment;
+use App\Model\InterestTag;
+use App\Model\Zan;
 date_default_timezone_set('Asia/Shanghai');
-class MomentsController extends Controller
+class IntMomentsController extends Controller
 {
-    public function test ()
-    {
-        return DB::table('users')->get();
-    }
-
-
-
     /**
      * [addMoments 添加朋友圈]
      * @param Request $request [description]
      */
     public function addMoments(Request $request) {
+        $int_tag = new InterestTag;
         $moment = [
-            'img' => $request->get('img'),
+            'imgs' => $request->get('img'),
             'user_code' => $request->get('user_code'),
             'content' => $request->get('content'),
             'year' => date('Y'),
             'month' => date('m'),
             'day' => date('d'),
             'time' => time(),
-            'code' => 'M'.Moments::count(),
-            'sharenear' => $request->get('sharenear'),
-            'sharepublic' => $request->get('sharepublic')
+            'code' => 'IM'.IntMoments::count(),
+            'int_code' => $int_tag->getTagCode($request->get('int_tag'))[0]->code
         ];
-        $r = Moments::insert($moment);
+        $r = IntMoments::insert($moment);
         if ($r) {
             return response()->json($this->responseSuccess("发布成功！"));
         }
@@ -48,25 +41,34 @@ class MomentsController extends Controller
      * @param  [type] $user_code [description]
      * @return [type]            [description]
      */
-    public function getMoments($user_code) {
-        $moment = new Moments();
+    public function getMoments($user_code, $int_code) {
+        $moment = new IntMoments;
         $zan = new Zan();
-        $data = $moment->getData();
+        // 根据用户兴趣类型 将信息分类
+        $data = $moment->getData('all');
         foreach ($data as $key => $value) {
+
             $value->time = $this->getChatTimeStr($value->time);
 
-            $dis = $zan->disExists($value->code, $user_code);
+            $dis = $zan->disIExists($value->code, $user_code);
             if($dis) {
                 $value->dis_zan = false;
             } else {
                 $value->dis_zan = true;
             }
-            $value->comment = $this->sortComments($value->comment);
-            $value->img = json_decode($value->img);
+            // $value->comment = $this->sortComments($value->comment);
+            $value->imgs = json_decode($value->imgs);
             $value->zan = $this->getZanNickname($value->zan);
-
+            foreach (json_decode($int_code) as $k => $v) {
+                if ($k == $value->int_code) {
+                    $res[$v] = $value;
+                } else {
+                    $res[$v] = [];
+                }
+            }
         }
-        return $data;
+        $res['全部'] = $data;
+        return $res;
     }
     /**
      * [getZanNickname 赋赞的用户名]
@@ -112,11 +114,11 @@ class MomentsController extends Controller
      */
     public function doZans(Request $request) {
         $zan = new Zan();
-        $dis = $zan->disExists($request->get('moment_code'), $request->get('user_code'));
+        $dis = $zan->disIExists($request->get('moment_code'), $request->get('user_code'));
         if (!$dis) {
             $zan->insert([
                 'user_code' => $request->get('user_code'),
-                'moment_code' => $request->get('moment_code')
+                'intmoment_code' => $request->get('moment_code')
             ]);
             return response()->json($this->responseSuccess("点赞成功！"));
         } else {
@@ -125,6 +127,7 @@ class MomentsController extends Controller
 
         }
     }
+
     /**
      * [doComment 提交评论]
      * @param  Request $request [description]

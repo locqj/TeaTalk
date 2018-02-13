@@ -57,8 +57,8 @@
         methods: {
         },
         created() {
-            console.log('created-contact');
-            console.log(this.$store.getters.friendslist);
+            // console.log('created-contact');
+            // console.log(this.$store.getters.friendslist);
         },
 
         components: {

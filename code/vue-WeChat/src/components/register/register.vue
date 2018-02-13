@@ -31,7 +31,7 @@
                 </mt-cell>
                 <SelectSchool v-on="{school: getschool, province_school: getprovince, major: getmajor}"></SelectSchool>
             </p>
-            <interest-tag></interest-tag>
+            <interest-tag v-on:interesttag="setinteresttag"></interest-tag>
 
         </div>
         <div class="weui-btn-area">
@@ -80,6 +80,9 @@ export default {
         setimgsfilname (data) {
             this.userInfo.img = data
         },
+        setinteresttag (data) {
+            this.userInfo.interest_tag = data
+        },
         register () {
             const storage = window.localStorage
             const phoneReg = /^1[34578]\d{9}$/
@@ -123,6 +126,12 @@ export default {
                     position: 'bottom'
 
                 })
+            } else if (!this.userInfo.interest_tag) {
+                Toast({
+                    message: '请选择匹配兴趣',
+                    position: 'bottom'
+
+                })
             } else {
                 this.$http.post('/test/api/user/register', this.userInfo)
                 .then((res) => {
@@ -140,7 +149,6 @@ export default {
         },
         sex ($sex) {
             if ($sex == 1) {
-                console.log('asd')
             } else {
                 // checked="checked"
             }
@@ -160,6 +168,11 @@ export default {
         open (picker) {
             this.$refs[picker].open()
         },
+    },
+    watch: {
+        userInfo: function(val) {
+            console.log(this.val);
+        }
     },
     created() {
         this.sexoption = [

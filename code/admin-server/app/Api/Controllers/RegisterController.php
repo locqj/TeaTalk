@@ -19,6 +19,12 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        $interest_tag = $request->get('interest_tag');
+
+        $interest_code = array();
+        foreach ($interest_tag as $key => $value) {
+            $interest_code[$key] = substr($value, 0, strpos($value, '['));
+        }
         $user_code = 'C'.User::count();
         $school_code = $this->getSchoolCode($request->get('school'));
         $department_code = $this->getDepartmentCode($request->get('department'));
@@ -47,6 +53,7 @@ class RegisterController extends Controller
                 'province' => $request->get('school_province'),
                 'signlog' => $request->get('signlog'),
                 'user_code' => $user_code,
+                'ins_code' => json_encode($interest_code)
             ]);
     		$data = [
     			'msg' => '注册成功',

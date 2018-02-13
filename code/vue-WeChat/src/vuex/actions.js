@@ -66,5 +66,6 @@ export default{
 
   ownFriends : ({ commit }, friends) => {
       commit(types.OWN_FRIENDS, friends)
-  }
+  },
+
 }

@@ -5,7 +5,8 @@
         title="最多选四个"
         :max="4"
         v-model="interest_value"
-        :options="options">
+        :options="options"
+        >
       </mt-checklist>
 
       <div>
@@ -28,15 +29,18 @@ export default {
             .then((res) => {
                 let data = res.data
                 let options = []
-                console.log(data);
                 data.forEach((value, key) => {
-                    options.push(value.name)
+                    options.push(value.code+'['+value.name+']')
                 })
                 _this.options = options
-                console.log(_this.options)
-
             })
-    }
+    },
+    watch: {
+        interest_value: function(val) {
+            console.log(val);
+            this.$emit("interesttag", val)
+        }
+    },
 }
 </script>
 

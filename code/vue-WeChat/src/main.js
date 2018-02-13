@@ -38,10 +38,6 @@ router.beforeEach((to, from, next) => {
                 // 后台请求通讯录
                 store.dispatch("getFriendsList", user.user_code)
             }
-
-
-
-
         } else {
             next({
                 path: '/login'

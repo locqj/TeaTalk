@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InterestTag extends Model
 {
-    protected $table = 'interest_tag';
+    protected $table = 'int_tag';
     public $timestamps = false;
 
 
@@ -22,6 +22,16 @@ class InterestTag extends Model
     public function getChildTag($parent_code)
     {
         return $this->where('status_del', 1)->where('parent_code', $parent_code)->get();
+    }
+
+    public function getTagName($code)
+    {
+        return $this->where('code', $code)->select('name')->get();
+    }
+
+    public function getTagCode($name)
+    {
+        return $this->where('name', $name)->select('code')->get();
     }
 
 }
