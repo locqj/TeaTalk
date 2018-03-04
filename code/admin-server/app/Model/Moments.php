@@ -8,7 +8,7 @@ class Moments extends Model
 {
     protected $table = 'moments';
     public $timestamps = false;
-    
+
     /**
      * [getData 获取朋友圈]
      * @return [type] [description]
@@ -17,6 +17,15 @@ class Moments extends Model
     	return $this->where('status_del', 1)->with('users', 'userDetails', 'zan', 'comment')->orderBy('time','desc')->get();
     }
 
+    public function getOwnData($code) {
+        $data = $this->where('status_del', 1)->where('user_code', $code)->with('users', 'userDetails', 'zan', 'comment')->orderBy('time','desc')->get();
+        foreach ($data as $key => $value) {
+            $value->img = json_decode($value->img);
+            $value->img_count = count($value->img);
+        }
+        return $data;
+
+    }
 
     public function getUserPhoto($user_code) {
         return $this->where('status_del', 1)
@@ -49,7 +58,7 @@ class Moments extends Model
      * @return [type] [description]
      */
     public function zan()
-    {   
+    {
         return $this->hasMany('App\Model\Zan', 'moment_code', 'code');
     }
 
@@ -59,7 +68,7 @@ class Moments extends Model
      * @return [type] [description]
      */
     public function comment()
-    {   
+    {
         return $this->hasMany('App\Model\MomentsComment', 'moment_code', 'code');
     }
 

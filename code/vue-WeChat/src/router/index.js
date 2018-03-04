@@ -3,7 +3,8 @@ import Router from 'vue-router'
 
 Vue.use(Router)
     //app整体由店面页和店内页组成 暂时并没有用到嵌套路由
-const routes = [{
+const routes = [
+    {
         path: '/login',
         name: "登录",
         component: resolve => require(["../components/login/login.vue"], resolve)
@@ -20,6 +21,17 @@ const routes = [{
             meta: {
                     requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
                 }
+    },{
+            path: '/intmoment/addfriend',
+            name: "添加好友",
+            components: {
+                "default": resolve => require(["../components/intmoment/index.vue"], resolve),
+                "subPage": resolve => require(["../components/intmoment/addfriends.vue"], resolve),
+            },
+            meta: {
+                    requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+                }
+
     },{
             path: '/intmoment/add',
             name: "添加",
@@ -162,28 +174,21 @@ const routes = [{
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             }
     }, {
-        path: '/explore',
-        name: "发现",
-        component: resolve => require(["../components/explore/explore.vue"], resolve),
-        meta: {
-                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-            }
-    }, {
-        path: '/explore/moments',
+        path: '/moments/moments',
         name: "朋友圈",
         components: {
-            "default": resolve => require(["../components/explore/explore.vue"], resolve),
-            "subPage": resolve => require(["../components/explore/moments.vue"], resolve)
+            "default": resolve => require(["../components/self/self.vue"], resolve),
+            "subPage": resolve => require(["../components/moments/moments.vue"], resolve)
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             }
     }, {
-        path: '/explore/moments/new',
+        path: '/moments/moments/new',
         name: "添加朋友圈",
         components: {
-            "default": resolve => require(["../components/explore/moments.vue"], resolve),
-            "subPage": resolve => require(["../components/explore/addmoments.vue"], resolve)
+            "default": resolve => require(["../components/moments/moments.vue"], resolve),
+            "subPage": resolve => require(["../components/moments/addmoments.vue"], resolve)
         },
         meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的

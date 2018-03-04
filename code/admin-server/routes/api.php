@@ -30,11 +30,9 @@ $api->version('v1', function ($api) {
         $api->get('dozan', 'MomentsController@doZans');
         $api->post('docomment', 'MomentsController@doComment');
 
+        /*兴趣圈*/
+        $api->get('getintmoment/{user_code}', 'IntMomentsController@getMoments');
         $api->post('addintmoment', 'IntMomentsController@addMoments');
-        $api->get('getintmoment/{user_code}/{int_code}', 'IntMomentsController@getMoments');
-        $api->get('getintzan', 'IntMomentsController@getZans');
-        $api->get('dointzan', 'IntMomentsController@doZans');
-        $api->post('dointcomment', 'IntMomentsController@doComment');
 
         $api->post('friends/getownfriends', 'FriendsController@getFriends');
         $api->get('friends/getfriends', 'FriendsController@getFriendsList');
@@ -42,14 +40,20 @@ $api->version('v1', function ($api) {
         $api->get('friends/getacceptusers', 'FriendsController@getAcceptUsers');
         $api->get('friends/getlist', 'FriendsController@getLists');
         $api->get('friends/getusers', 'FriendsController@doFindUsers');
+        /*查询用户详情*/
         $api->get('friends/getuser', 'FriendsController@getFriendDetails');
+
+        /*添加用户*/
         $api->post('friends/doadd', 'FriendsController@doAddFriend');
+        /*接受添加用户*/
         $api->post('friends/doaccept', 'FriendsController@doAcceptFriend');
+        /*拒绝添加用户*/
         $api->post('friends/dorefuse', 'FriendsController@doRefuseFriend');
 
-
-
+        /*获取自己的moments*/
+        $api->post('own/moments', 'MomentsController@ownMoments');
         $api->get('test', 'MomentsController@test');
+
     });
 
     $api->group(['namespace' => 'App\Api\Controllers', 'middleware'=>'jwt.auth'],function ($api){

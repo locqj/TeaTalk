@@ -34,7 +34,7 @@ class UserManages extends Model
     		->where('status', 0)->with('wUsers', 'wUserDetails')->get();
     }
 
-    
+
     /**
      * [getFriends 已经接受的，成为朋友名单]
      * @param  [type] $user_code [description]
@@ -51,7 +51,7 @@ class UserManages extends Model
      */
     public function getRefuse($user_code) {
     	return $this->where('user_code', $user_code)
-    		->where('status', 2)->with('aUsers', 'aUserDetails')->get();
+    		->where('status', 2)->with('aUsers', 'wUserDetails')->get();
     }
 
     public function getAcceptUsers($friend_code) {

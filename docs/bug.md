@@ -26,7 +26,18 @@
 * 好友必须双方都同意才算好友
 
 ### 2-7-2018
-* 注册用户太繁琐 后期简化 等进入系统后补充信息， 用户注册成功 user_detail 中的 first_word, first_asill没有
+* 注册用户太繁琐 后期简化 等进入系统后补充信息， 用户注册成功 user_detail 中的 first_word, first_asill没有 ok
 * 注册用户 头像 没有插入 ok
 * 朋友圈头像显示不正确 ok
 * 个性签名 demo 换真实数据 ok
+
+### 3-1-2018
+* new-Friends 按钮反馈联动bug ok
+* 接受好友 原请求status 0 没有update 直接新insert一条数据 ok
+* new-Friends 数据展示不正确 ok
+* new-Friends 学校专业分两行 ok
+* contact/add-friend 添加完好友 按钮不可再按 ok
+
+### 3-2-2018
+* 朋友圈头像优化 ok
+* 优化兴趣圈代码 ok

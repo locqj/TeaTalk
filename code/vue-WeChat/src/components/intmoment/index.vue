@@ -1,77 +1,44 @@
 <template>
     <!--朋友圈组件 后期开发的核心-->
     <div id="moments">
-        <mt-navbar v-model="selected" class="nav-head">
-          <mt-tab-item id="1">{{tag1}}</mt-tab-item>
-          <mt-tab-item id="2">{{tag2}}</mt-tab-item>
-          <mt-tab-item id="3">{{tag3}}</mt-tab-item>
-          <mt-tab-item id="4">{{tag4}}</mt-tab-item>
-          <mt-tab-item id="5">{{tag5}}</mt-tab-item>
+        <mt-navbar v-model="selected" class="nav-head" >
+          <mt-tab-item :id="key" v-for="(item, key) in navs">{{item.nav}}</mt-tab-item>
         </mt-navbar>
-
         <!-- tab-container -->
-        <mt-tab-container v-model="selected" >
-          <mt-tab-container-item id="1">
+        <mt-tab-container v-model="selected" style="margin-top: 1%">
+          <mt-tab-container-item :id="key" v-for="(item, key) in navs">
               <!-- moments -->
-              <div class="weui-cell moments__post" v-for="(item, key) in tags1">
-                  <div class="weui-cell__hd">
-                      <img :src="item.head_img">
+              <div class="weui-cell moments__post" v-for="(it, ke) in item.data">
+                  <div class="weui-cell__hd" @click="redto(it.user_code)">
+                      <img :src="it.head_img">
                   </div>
                   <div class="weui-cell__bd" >
                       <!-- 人名链接 -->
-                      <a class="title">
-                          <span>{{ item.user_details.nickname }}</span>
+                      <a class="title" @click="redto(it.user_code)">
+                          <span>{{ it.user_details.nickname }}</span>
                       </a>
                       <!-- post内容 -->
-                      <p id="paragraph" class="paragraph">{{ item.content }}</p>
+                      <p id="paragraph" class="paragraph">{{ it.content }}</p>
                       <!-- 伸张链接 -->
                       <!-- <a id="paragraphExtender" class="paragraphExtender">显示全文</a> -->
                       <!-- 相册 -->
-                      <div class="thumbnails my-gallery" v-if="item.imgs">
-                          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="thumbnail" v-for="(it, k) in item.imgs">
+                      <div class="thumbnails my-gallery" v-if="it.imgs">
+                          <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="thumbnail" v-for="(ig, k) in it.imgs">
 
-                              <a :href="it" itemprop="contentUrl" data-size="400x400">
-                                  <img :src="it" itemprop="thumbnail" alt="Image description" />
+                              <a :href="ig" itemprop="contentUrl" data-size="400x400">
+                                  <img :src="ig" itemprop="thumbnail" alt="Image description" />
                               </a>
                               <figcaption itemprop="caption description">Image {{ k }}</figcaption>
                           </figure>
                       </div>
                       <!-- 资料条 -->
                       <div class="toolbar">
-                          <p class="timestamp">{{ item.time }}</p>
-                          <mt-button id="actionToggle" class="actionToggle" @click.native="sheetVisible = true" @click="changecode(item.code, item.user_code, key, item.user_details.nickname)" v-if="item.dis_zan">...</mt-button>
-                          <mt-button id="actionToggle" class="actionToggle" @click.native="sheetVisible1 = true" @click="changecode(item.code, item.user_code, key, item.user_details.nickname)" v-else>...</mt-button>
+                          <p class="timestamp">{{ it.time }}</p>
                       </div>
-                      <!-- 赞／评论区 -->
-                      <p class="liketext"><i class="iconfont">&#xe874;</i><span class="nickname" v-for="it in item.zan">{{ it.name }},</span></p>
-                      <!-- 评论 -->
-
-                      <span v-for="it in item.comment">
-
-                      <p  class="contenttext" @click="replayComment(it, item)"> <span v-if="!it.status_first">回复</span><span class="nickname">{{ it.user_name }}</span>To<span class="nickname">{{ it.to_user_name }}:</span><span class="content">{{ it.content }}</span></p>
-
-
-
-                      </span>
-                      <!-- end 评论 -->
-                      <mt-actionsheet :actions="actions" v-model="sheetVisible" v-if="item.dis_zan"></mt-actionsheet>
-                      <mt-actionsheet :actions="actions2" v-model="sheetVisible1" v-else></mt-actionsheet>
                   </div>
                   <!-- 结束 post -->
               </div>
               <!-- end moments -->
-          </mt-tab-container-item>
-          <mt-tab-container-item id="2">
-            <mt-cell v-for="item in tags2" :title="'测试 ' + item"/>
-          </mt-tab-container-item>
-          <mt-tab-container-item id="3">
-            <mt-cell v-for="item in tags3" :title="'选项 ' + item"/>
-          </mt-tab-container-item>
-          <mt-tab-container-item id="4">
-            <mt-cell v-for="item in tags4" :title="'选项 ' + item"/>
-          </mt-tab-container-item>
-          <mt-tab-container-item id="5">
-            <mt-cell v-for="item in tags5" :title="'选项 ' + item"/>
           </mt-tab-container-item>
         </mt-tab-container>
 
@@ -128,7 +95,7 @@
     export default {
         data() {
             return {
-                selected: "1",
+                selected: 0,
                 sheetVisible: false,
                 sheetVisible1: false,
                 user_zan: false,
@@ -136,13 +103,35 @@
                 moment_user_code:'',
                 userInfo: this.$store.state.userInfo,
                 moment: {},
-                actions: [],
-                actions2: [],
-                firstcomment: {},
-
+                navs:{},
             }
         },
+        created () {
+            let _this = this
+            let navs = []
+            this.$http.get('/test/api/getintmoment/'+this.userInfo.user_code).then((res) => {
+                let intdata = res.data
+                let i = 1
+                for (let index in intdata)
+                {
+                    let data = {}
+                    data.nav = index
+                    data.data = intdata[index]
+                    navs.push(data)
+                }
+            })
+            console.log(navs);
+            // 设置导航栏
+            this.navs = navs
+
+        },
+
         methods: {
+            redto (code) {
+                if (code !== this.userInfo.user_code) {
+                    this.$router.push({ path: '/intmoment/addfriend', query: { code: code, own_code:  this.userInfo.user_code}})
+                }
+            },
             // 请求tag数据
             tag(int_code) {
                 console.log(int_code);
@@ -287,159 +276,6 @@
                 if (hashData.pid && hashData.gid) {
                     openPhotoSwipe(hashData.pid, galleryElements[hashData.gid - 1], true, true)
                 }
-            },
-            zan () {
-                this.$http.get('/test/api/dointzan?moment_code='+this.moment_code+'&user_code='+this.userInfo.user_code)
-                .then((res) => {
-                    Toast({
-                        message: '赞',
-                        position: 'bottom'
-                    })
-                    let addzan = { name: this.userInfo.nickname }
-                    for (let i in this.moment) {
-                        if (i == this.firstcomment.key) {
-                            this.moment[i].dis_zan = false
-                            this.moment[i].zan.push(addzan)
-                        }
-                    }
-                })
-
-
-            },
-            zan1 () {
-                this.$http.get('/test/api/dointzan?moment_code='+this.moment_code+'&user_code='+this.userInfo.user_code)
-                .then((res) => {
-                    Toast({
-                        message: '取消点赞',
-                        position: 'bottom'
-                    })
-                    let addzan = { name: this.userInfo.nickname }
-                    for (let i in this.moment) {
-                        if (i == this.firstcomment.key) {
-                            let data =  this.moment[i].zan
-                            for (let j in data) {
-                                if (data[j].name == this.userInfo.nickname ) {
-                                    this.moment[i].dis_zan = true
-                                    data.pop()
-                                }
-                            }
-                        }
-                    }
-                })
-
-
-
-            },
-            comment () {
-
-                MessageBox.prompt(' ', '请输入评论').then(({ value }) => {
-                    if (value) {
-                        this.$http.post('/test/api/docomment', {
-                         'content': value,
-                         'moment_code': this.moment_code,
-                         'user_code': this.userInfo.user_code,
-                         'to_user_code': this.moment_user_code,
-                         'parent_code': 'FMC0'+this.moment_code
-                        })
-                        .then((res) => {
-                            Toast({
-                                message: '评论成功',
-                                position: 'bottom'
-                            })
-                            let addcomment = { user_name:this.userInfo.nickname, to_user_name: this.firstcomment.to_user_name, content: value, status_first: 1}
-                            for (let i in this.moment) {
-                                if (i == this.firstcomment.key) {
-                                    this.moment[i].comment.push(addcomment)
-                                }
-                            }
-
-
-                        })
-                    }
-                });
-            },
-            changecode (data, to_user_code, key, to_user_name) {
-                this.moment_code = data
-                this.moment_user_code = to_user_code
-                this.firstcomment.key = key
-                this.firstcomment.to_user_name = to_user_name
-            },
-            replayComment(it, item) {
-
-                MessageBox.prompt(' ', '请输入回复').then(({ value }) => {
-                    if (value) {
-                        this.$http.post('/test/api/docomment', {
-                         'content': value,
-                         'moment_code': item.code,
-                         'user_code': this.userInfo.user_code,
-                         'to_user_code': it.to_user_code,
-                         'parent_code': it.code
-                        })
-                        .then((res) => {
-                            Toast({
-                                message: '回复成功',
-                                position: 'bottom'
-                            })
-                            for (let i in item) {
-                                if (i == 'comment') {
-                                    let addcomment = { user_name:this.userInfo.nickname, to_user_name: it.user_name, content: value, status_first: 0}
-                                    item[i].push(addcomment)
-                                }
-                            }
-                        })
-                    }
-                });
-
-            }
-        },
-        mounted() {
-            this.initPhotoSwipeFromDOM('.my-gallery');
-            this.actions = [{
-                name: '点赞',
-                method: this.zan
-            }, {
-                name: '评论',
-                method: this.comment
-            }];
-            this.actions2 = [{
-                name: '取消点赞',
-                method: this.zan1
-            }, {
-                name: '评论',
-                method: this.comment
-            }];
-        },
-        created () {
-            let _this = this
-            let intdata = this.$store.state.userInfo.intdata
-            console.log(intdata);
-            let i = 1
-            for (let index in intdata)
-            {
-                switch (i) {
-                    case 1:
-                        _this.tag1 = index
-                        _this.tags1 = intdata[index]
-                        break;
-                    case 2:
-                        _this.tag2 = index
-                        _this.tags2 = intdata[index]
-                        break;
-                    case 3:
-                        _this.tag3 = index
-                        _this.tags3 = intdata[index]
-                        break;
-                    case 4:
-                        _this.tag4 = index
-                        _this.tags4 = intdata[index]
-                        break;
-                    case 5:
-                        _this.tag5 = index
-                        _this.tags5 = intdata[index]
-                        break;
-
-                }
-                i++
             }
         },
 

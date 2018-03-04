@@ -19,13 +19,13 @@
             <router-link to="/self/profile/my-qrcode">&nbsp;<img src="../../assets/images/contact_add-friend-my-qr.png" style="vertical-align: middle;;width:24px" class="_align-middle"></router-link>
         </p>
         <div class="weui-cells" >
-            <a v-if="disusers" class="weui-cell weui-cell_access" v-for="item in users">
+            <a v-if="disusers" class="weui-cell weui-cell_access" v-for="(item, key) in users">
                 <div class="weui-cell__hd"><img :src="item.head_img" alt=""></div>
                 <div class="weui-cell__bd">
                     <p>{{ item.name }}</p>
                     <p>{{ item.school_name }} - {{ item.department_name }}</p>
                 </div>
-                <mt-button type="default" size="small" class="addfriend" @click="addfriend(item.code)">添加朋友</mt-button>
+                <mt-button type="default" size="small" class="addfriend" @click="addfriend(item.code, key)">添加朋友</mt-button>
             </a>
         </div>
         <div class="weui-cells" >
@@ -59,11 +59,6 @@
             .then((res) => {
                 this.waitacceptusers = res.data.user_manages
             })
-
-
-        },
-        mounted() {
-
         },
         methods: {
             getusers() {
@@ -76,7 +71,7 @@
                     })
                 }
             },
-            addfriend(friend_code) {
+            addfriend(friend_code, key) {
                 this.$http.post('/test/api/friends/doadd', {
                     'user_code': this.userInfo.user_code,
                     'friend_code': friend_code

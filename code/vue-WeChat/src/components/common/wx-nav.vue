@@ -19,12 +19,6 @@
             </dt>
             <dd>通讯录</dd>
         </router-link>
-		<router-link to="/explore" tag="dl">
-            <dt class="iconfont icon-find" >
-                <i class="new-msg-dot"></i>
-            </dt>
-            <dd>发现</dd>
-        </router-link>
 		<router-link to="/self" tag="dl">
             <dt class="iconfont icon-me" >
                 <!--<i class="new-msg-dot"></i>-->

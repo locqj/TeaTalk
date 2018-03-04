@@ -59,7 +59,7 @@ class AuthController extends Controller
         }
         $user->ins_code = $int_tag_name;
         $user->img = json_decode($user->img)[0];
-        $user->intdata = $this->getIntData($user_code->code, $user->ins_code);
+        // $user->intdata = $this->getIntData($user_code->code, $user->ins_code);
         return response()->json($this->responseData(compact('token', 'user')));
     }
 
@@ -89,59 +89,7 @@ class AuthController extends Controller
         return response()->json(compact('user'));
     }
 
-    public function getIntData($user_code, $int_code)
-    {
-        $moment = new IntMoments;
-        $zan = new Zan();
-        // 根据用户兴趣类型 将信息分类
-        $res['全部'] = $this->getIntList('all');
-        foreach ($int_code as $k => $v) {
-            $res[$v] = $this->getIntList($k);
-        }
-        return $res;
-    }
-
-    /**
-     * [getZanNickname 赋赞的用户名]
-     * @param  [type] $data [description]
-     * @return [type]       [description]
-     */
-    public function getZanNickname($data) {
-        $user_details = new UserDetails();
-        foreach ($data as $k => $v) {
-            $v->name = $user_details->getNickname($v->user_code);
-        }
-        return $data;
-    }
-
-    public function getIntList($int_code)
-    {
-        $moment = new IntMoments;
-        $zan = new Zan();
-        $res = array();
-        // 根据用户兴趣类型 将信息分类
-        $data = $moment->getData('all');
-        foreach ($data as $key => $value) {
-            if ($value->int_code == $int_code || $int_code == 'all') {
-                # code...
-                $value->time = $this->getChatTimeStr($value->time);
-                // $dis = $zan->disIExists($value->code, $user_code);
-                // if($dis) {
-                //     $value->dis_zan = false;
-                // } else {
-                //     $value->dis_zan = true;
-                // }
-                // $value->comment = $this->sortComments($value->comment);
-                $value->imgs = json_decode($value->imgs);
-                $value->zan = $this->getZanNickname($value->zan);
-                $value->head_img = json_decode($value->userDetails->img);
-                // 匹配用户tag
-                $res[$key] = $value;
-            }
-        }
-        return $res;
 
 
-    }
 
 }

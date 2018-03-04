@@ -21,6 +21,7 @@ const state = {
     token: null,
     friendslist: {},
     ownfrienfs: {},
+    intmoments: {}, //兴趣圈list
     msgList: {
         stickMsg: [], //置顶消息列表 后期需要
         baseMsg: [{ //普通消息列表

@@ -150,6 +150,13 @@ class MomentsController extends Controller
     }
 
 
+    public function ownMoments(Request $request) {
+        $moments = new Moments;
+        $data = $moments->getOwnData($request->get('user_code'));
+        return response()->json($data);
+    }
+
+
 
 
 }

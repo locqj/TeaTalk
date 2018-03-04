@@ -16,9 +16,9 @@ class IntMoments extends Model
      */
     public function getData($int_code) {
         if ($int_code == 'all') {
-            return $this->where('status_del', 1)->with('users', 'userDetails', 'zan')->orderBy('time','desc')->get();
+            return $this->where('status_del', 1)->with('users', 'userDetails')->orderBy('time','desc')->get();
         } else {
-            return $this->where('status_del', 1)->where('int_code', $int_code)->with('users', 'userDetails', 'zan')->orderBy('time','desc')->get();
+            return $this->where('status_del', 1)->where('int_code', $int_code)->with('users', 'userDetails')->orderBy('time','desc')->get();
 
         }
 

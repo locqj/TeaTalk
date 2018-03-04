@@ -3,6 +3,7 @@
   <div id="self">
     <div class="weui-tab__content" style="display: block;">
       <div class="weui-cells">
+
         <router-link to="/self/profile" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img :src="userInfo.img" alt="" class="self-header">
@@ -18,15 +19,31 @@
         </router-link>
       </div>
       <div class="weui-cells">
+          <router-link to="/moments/moments" class="weui-cell weui-cell_access" tag="div" v-on:click.native="momentNewMsg=false">
+            <div class="weui-cell__hd">
+              <img src="../../assets/images/find_icon-circle.png" >
+            </div>
+            <div class="weui-cell__bd" >
+              朋友圈
+            </div>
+            <div class="weui-cell__ft">
+              <div class="home__notice" v-show="momentNewMsg">
+                <img src="https://sinacloud.net/vue-wechat/images/headers/yehua.jpg" alt="" class="">
+                <!-- <i class="new-msg-dot"></i> -->
+              </div>
+            </div>
+          </router-link>
+
+
         <router-link to="/self/album" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_more-my-album.png">
           </div>
           <div class="weui-cell__bd">
             <p>相册</p>
-
           </div>
         </router-link>
+
         <router-link to="/self/settings" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_more-setting.png">
@@ -50,6 +67,7 @@
                 edit: false,
                 intros: '',
                 sheetVisible: false,
+                momentNewMsg: true
             }
         },
         created () {

@@ -116,9 +116,5 @@
                 sheetVisible: false,
             }
         },
-        created () {
-
-        },
-
     }
 </script>

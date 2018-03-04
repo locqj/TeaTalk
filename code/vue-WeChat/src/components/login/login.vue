@@ -103,6 +103,7 @@ export default {
                         storage.setItem('token', token)
                         storage.setItem('userInfo', JSON.stringify(userInfo))
                         this.$store.dispatch('DOLOGIN', token)//调用DOLOGIN的store
+                        this.$store.dispatch('intMoments', userInfo.user_code)//调用DOLOGIN的store
                         this.$router.push({path: '/tologin'})
 
                     } else {

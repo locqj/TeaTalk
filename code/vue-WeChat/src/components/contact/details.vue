@@ -57,8 +57,7 @@
             </div>
         </div>
 
-        <a href="javascript:;" class="weui-btn weui-btn_primary" style="width:90%;margin-top:20px;" @click="send()">发消息</a>
-
+        <a href="javascript:;" class="weui-btn weui-btn_primary" style="width:90%;margin-top:20px;" @click="send()" >发消息</a>
     </div>
 </template>
 <script>
@@ -78,14 +77,9 @@
         },
         methods: {
             send() {
-                console.log(this.userInfo);
                 this.$router.push({path: '/wechat/dialogue', query:{ mid: 3, name: this.userInfo.user_details.nickname, group_num: 1}})
 
-            }
+            },
         }
     }
 </script>
-<style>
-    .head-detail {
-    }
-</style>
